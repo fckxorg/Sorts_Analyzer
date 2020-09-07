@@ -48,11 +48,11 @@ int main(int argc, char** argv)
    auto results = benchmarkSort(N_SAMPLES, InsertionSort<Stat<int>>());
 
 
-    printf("| Comparisons | Assignments |\n");
+    printf("|  Array size | Comparisons | Assignments |\n");
     for(size_t i = 0; i < N_SAMPLES; ++i) 
     {
-        printf("| %11.1d | %11.1d |\n", results[i].first, results[i].second);
+        printf("| %11.1d | %11.1d | %11.1d |\n", i, results[i].first, results[i].second);
     }
-    
+
     delete[] results;
 }
