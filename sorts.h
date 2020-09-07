@@ -3,7 +3,7 @@ void insertionSort(T* begin, T* end)
 {  
     for (T* current = begin + 1; current != end; ++current) 
     {  
-        int key = *current;  
+        T key = *current;  
         T* place = current - 1;  
         while (place >= begin && *place > key) 
         {  
