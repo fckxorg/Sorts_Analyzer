@@ -5,13 +5,14 @@
 #include "sorts.h"
 #include "stat.h"
 
-void generateArray(Stat<int>* array, size_t size, size_t mod = 10) 
+void generateArray(Stat<int>* begin, Stat<int>* end, size_t mod = 10) 
 {
-    assert(array != nullptr);
+    assert(begin != nullptr);
+    assert(end != nullptr);
 
-    for(size_t i = 0; i < size; ++i)
+    for(Stat<int>* current = begin; current != end; ++current)
     {
-        array[i] = rand() % mod;
+        *current = rand() % mod;
     }
 }
 
@@ -25,7 +26,7 @@ std::pair<int, int>* benchmarkSort(size_t n_samples, AbstractSort<Stat<int>>&& s
         Stat<int>::n_assignments = 0;
 
         Stat<int>* array = new Stat<int>[current_size]();
-        generateArray(array, current_size);
+        generateArray(array, array + current_size);
         sort(array, array + current_size);
         results[current_size] = {Stat<int>::n_comparisons, Stat<int>::n_assignments};
 
@@ -35,20 +36,11 @@ std::pair<int, int>* benchmarkSort(size_t n_samples, AbstractSort<Stat<int>>&& s
     return results;
 }
 
-
 int main(int argc, char** argv)
 {
     const size_t N_SAMPLES = 100;
-
-    /*Stat<int>* array = new Stat<int>[N_SAMPLES]();
-    generateArray(array, N_SAMPLES);
-    auto sort = InsertionSort<Stat<int>>();
-    sort(array, array + N_SAMPLES);
-    printf("%d %d\n", Stat<int>::n_assignments, Stat<int>::n_comparisons);
-*/
-
-   auto results = benchmarkSort(N_SAMPLES, InsertionSort<Stat<int>>());
-
+    
+    auto results = benchmarkSort(N_SAMPLES, InsertionSort<Stat<int>>());
 
     printf("|  Array size | Comparisons | Assignments |\n");
     for(size_t i = 0; i < N_SAMPLES; ++i) 
