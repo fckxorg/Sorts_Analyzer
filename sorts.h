@@ -1,3 +1,4 @@
+#include <assert.h>
 
 template <typename T>
 class AbstractSort
@@ -12,6 +13,9 @@ class InsertionSort : public AbstractSort<T>
     public:
         void operator()(T* begin, T* end) override
         {
+            assert(begin != nullptr);
+            assert(end != nullptr);
+
             for (T* current = begin + 1; current != end; ++current) 
             {  
                 T key = *current;  

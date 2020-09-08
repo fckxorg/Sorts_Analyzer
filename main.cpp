@@ -5,8 +5,10 @@
 #include "sorts.h"
 #include "stat.h"
 
-void generateArray(Stat<int>* array, size_t size, int mod = 10) 
+void generateArray(Stat<int>* array, size_t size, size_t mod = 10) 
 {
+    assert(array != nullptr);
+
     for(size_t i = 0; i < size; ++i)
     {
         array[i] = rand() % mod;
