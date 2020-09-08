@@ -6,7 +6,7 @@ class Stat
         static size_t n_comparisons;
         static size_t n_assignments;
 
-        Stat() : value(T(0)) {}; 
+        Stat() : value(T()) {}; 
 
         Stat(T value) : value(value) {}
 
