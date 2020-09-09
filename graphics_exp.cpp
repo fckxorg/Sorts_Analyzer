@@ -4,6 +4,7 @@
 #include <thread>
 #include <functional>
 #include <list>
+#include <queue>
 
 const sf::Color PRIMARY_DARK = sf::Color(37, 61, 91);
 const sf::Color PRIMARY_LIGHT = sf::Color(239, 247, 246);
@@ -18,9 +19,16 @@ const unsigned int BUTTON_TEXT_SIZE = 24;
 const unsigned int BUTTON_PUSH_ANIMATION_DURATION = 150;
 
 
-
-
 sf::Font ROBOTO_MEDIUM;
+
+class Event
+{
+    public:
+        virtual ~Event(){};
+        virtual void handle(sf::RenderWindow& window) = 0;
+};
+
+std::queue<Event*> event_queue;
 
 class Clickable : public sf::Drawable
 {
@@ -30,6 +38,23 @@ class Clickable : public sf::Drawable
         virtual ~Clickable(){};
 };
 
+class Clicked : public Event
+{
+    private:
+        Clickable* object;
+    public:
+        ~Clicked(){}
+
+        Clicked(Clickable* object)
+        {
+            this->object = object;
+        }
+
+        void handle(sf::RenderWindow& window) override
+        {
+            object->onClick(window);
+        }
+};
 
 
 class rectButton : public Clickable
@@ -191,11 +216,16 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
                 window.close();
         }
 
+        while(!event_queue.empty())
+        {
+            Event* event = event_queue.front();
+            event->handle(window);
+            event_queue.pop();
+        }
 
         bool is_any_clickable_under_cursor = false;
         for(auto object : clickable_objects) {
@@ -204,7 +234,8 @@ int main()
                 is_any_clickable_under_cursor = true;
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
-                    object->onClick(window);
+                    Clicked* event = new Clicked(object);
+                    event_queue.push(event);
                 }
                 break;
             }
