@@ -38,6 +38,20 @@ class Clickable : public sf::Drawable
         virtual ~Clickable(){};
 };
 
+class HoveredClickable : public Event
+{
+    public:
+        ~HoveredClickable() = default;
+        HoveredClickable() = default;
+        void handle(sf::RenderWindow& window) override
+        {
+            sf::Cursor hand_cursor;
+            hand_cursor.loadFromSystem(sf::Cursor::Hand);
+            window.setMouseCursor(hand_cursor);
+        }
+
+};
+
 class Clicked : public Event
 {
     private:
@@ -205,9 +219,7 @@ int main()
         clickable_objects.push_back(button);
     }
 
-    sf::Cursor hand_cursor;
     sf::Cursor arrow_cursor;
-    hand_cursor.loadFromSystem(sf::Cursor::Hand);
     arrow_cursor.loadFromSystem(sf::Cursor::Arrow);
 
     while (window.isOpen())
@@ -225,6 +237,7 @@ int main()
             Event* event = event_queue.front();
             event->handle(window);
             event_queue.pop();
+            delete event;
         }
 
         bool is_any_clickable_under_cursor = false;
@@ -232,6 +245,9 @@ int main()
             if(object->isUnderCursor(window))
             {
                 is_any_clickable_under_cursor = true;
+                HoveredClickable* event = new HoveredClickable();
+                event_queue.push(event);
+
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
                     Clicked* event = new Clicked(object);
@@ -241,11 +257,8 @@ int main()
             }
         }
 
-        if(is_any_clickable_under_cursor)
-        {
-            window.setMouseCursor(hand_cursor); 
-        }
-        else
+       
+        if(!is_any_clickable_under_cursor)
         {
             window.setMouseCursor(arrow_cursor);
         }
