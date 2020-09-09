@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <cstdio>
+#include <chrono>
+#include <thread>
 
 const sf::Color PRIMARY_DARK = sf::Color(37, 61, 91);
 const sf::Color PRIMARY_LIGHT = sf::Color(239, 247, 246);
@@ -9,6 +11,7 @@ const sf::Color PRIMARY_ACCENT = sf::Color(255, 58, 32);
 
 const sf::Vector2f SORT_BUTTON_SIZE = sf::Vector2f(120.f, 50.f);
 const unsigned int BUTTON_TEXT_SIZE = 24;
+const unsigned int BUTTON_PUSH_ANIMATION_DURATION = 150;
 
 sf::Font ROBOTO_MEDIUM;
 
@@ -82,10 +85,36 @@ class rectButton : public sf::Drawable
             target.draw(text);
         }
 
-        bool isUnderCursor()
+        bool isUnderCursor(sf::RenderWindow& window)
         {
-            return true;
+            sf::Vector2i local_position = sf::Mouse::getPosition(window);
+            sf::Vector2f button_size  = getSize();
+            sf::Vector2f button_pos = getPosition();
+            
+            if(button_pos.x <= local_position.x 
+            && button_pos.y <= local_position.y 
+            && button_pos.x + button_size.x >= local_position.x
+            && button_pos.y + button_size.y >= local_position.y)
+            {
+                return true;
+            }
+            return false;
         }
+
+    void animatePush(sf::RenderWindow& window)
+    {
+        sf::Color old_color = getColor();
+        setColor(sf::Color(old_color.r - 20, old_color.g - 20, old_color.b - 20)); // process values for dark buttons < 20
+        
+        window.draw(*this);
+        window.display();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(BUTTON_PUSH_ANIMATION_DURATION));
+        setColor(old_color);
+
+        window.draw(*this);
+        window.display();
+    }
 
 };
 
@@ -112,6 +141,11 @@ int main()
     rect.setFillColor(SECONDARY_DARK);
     rectButton button = createSortStyledButton(sf::Vector2f(50.f, 750.f), "MergeSort");
 
+    sf::Cursor hand_cursor;
+    sf::Cursor arrow_cursor;
+    hand_cursor.loadFromSystem(sf::Cursor::Hand);
+    arrow_cursor.loadFromSystem(sf::Cursor::Arrow);
+
     while (window.isOpen())
     {
         // check all the window's events that were triggered since the last iteration of the loop
@@ -125,19 +159,20 @@ int main()
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            sf::Vector2i local_position = sf::Mouse::getPosition(window);
-            sf::Vector2f button_size  = button.getSize();
-            sf::Vector2f button_pos = button.getPosition();
-            
-            if(button_pos.x <= local_position.x 
-            && button_pos.y <= local_position.y 
-            && button_pos.x + button_size.x >= local_position.x
-            && button_pos.y + button_size.y >= local_position.y)
+            if(button.isUnderCursor(window));
             {
-                sf::Color old_color = button.getColor();
-                button.setColor(sf::Color(old_color.r + 10, old_color.g + 10, old_color.b + 10));
+                button.animatePush(window);
             }
+        }
 
+
+        if(button.isUnderCursor(window))
+        {
+            window.setMouseCursor(hand_cursor);
+        }
+        else 
+        {
+            window.setMouseCursor(arrow_cursor);
         }
 
         window.clear(PRIMARY_LIGHT); // clearing window with black color
