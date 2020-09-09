@@ -13,7 +13,7 @@ const unsigned int BUTTON_TEXT_SIZE = 24;
 sf::Font ROBOTO_MEDIUM;
 
 
-class rectButton
+class rectButton : public sf::Drawable
 {
     public:
         sf::RectangleShape base;
@@ -46,6 +46,21 @@ class rectButton
             text.setPosition(sf::Vector2f(pos.x + 4, pos.y + 10));
         }
 
+        sf::Vector2f getPosition()
+        {
+            return base.getPosition();
+        }
+
+        sf::Vector2f getSize()
+        {
+            return base.getSize();
+        }
+
+        sf::Color getColor()
+        {
+            return base.getFillColor();
+        }
+
         void setTextFont(const sf::Font& font)
         {
             text.setFont(font);
@@ -61,10 +76,15 @@ class rectButton
             text.setString(string);
         }
 
-        void render(sf::RenderWindow& window)
+        void draw (sf::RenderTarget& target, sf::RenderStates states) const override
         {
-            window.draw(base);
-            window.draw(text);
+            target.draw(base);
+            target.draw(text);
+        }
+
+        bool isUnderCursor()
+        {
+            return true;
         }
 
 };
@@ -88,6 +108,9 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
+    sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
+    rect.setFillColor(SECONDARY_DARK);
+    rectButton button = createSortStyledButton(sf::Vector2f(50.f, 750.f), "MergeSort");
 
     while (window.isOpen())
     {
@@ -100,13 +123,25 @@ int main()
                 window.close();
         }
 
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            sf::Vector2i local_position = sf::Mouse::getPosition(window);
+            sf::Vector2f button_size  = button.getSize();
+            sf::Vector2f button_pos = button.getPosition();
+            
+            if(button_pos.x <= local_position.x 
+            && button_pos.y <= local_position.y 
+            && button_pos.x + button_size.x >= local_position.x
+            && button_pos.y + button_size.y >= local_position.y)
+            {
+                sf::Color old_color = button.getColor();
+                button.setColor(sf::Color(old_color.r + 10, old_color.g + 10, old_color.b + 10));
+            }
+
+        }
+
         window.clear(PRIMARY_LIGHT); // clearing window with black color
-        sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
-        rect.setFillColor(SECONDARY_DARK);
-
-        rectButton button = createSortStyledButton(sf::Vector2f(50.f, 750.f), "MergeSort");
-
-        button.render(window);
+        window.draw(button);
         window.draw(rect);
         window.display();
 
