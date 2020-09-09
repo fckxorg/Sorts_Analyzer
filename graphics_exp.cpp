@@ -5,8 +5,8 @@
 
 const sf::Color PRIMARY_DARK = sf::Color(37, 61, 91);
 const sf::Color PRIMARY_LIGHT = sf::Color(239, 247, 246);
-const sf::Color SECONDARY_LIGHT = sf::Color(108, 142, 173);
-const sf::Color SECONDARY_DARK = sf::Color(58, 51, 53);
+const sf::Color SECONDARY_LIGHT = sf::Color(58, 51, 53); 
+const sf::Color SECONDARY_DARK = sf::Color(108, 142, 173); 
 const sf::Color PRIMARY_ACCENT = sf::Color(255, 58, 32);
 
 const sf::Vector2f SORT_BUTTON_SIZE = sf::Vector2f(180.f, 50.f);
@@ -170,22 +170,17 @@ int main()
                 window.close();
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            for(int i = 0; i < 5; ++i) 
-            {
-                if(buttons[i].isUnderCursor(window));
-                {
-                    buttons[i].animatePush(window);
-                }
-            }
-        }
 
         bool is_any_button_under_cursor = false;
         for(int i = 0; i < 5; ++i) {
             if(buttons[i].isUnderCursor(window))
             {
                 is_any_button_under_cursor = true;
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    printf("Pressed button %d\n", i);
+                    buttons[i].animatePush(window);
+                }
                 break;
             }
         }
