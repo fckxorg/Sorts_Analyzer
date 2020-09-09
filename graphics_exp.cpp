@@ -2,12 +2,16 @@
 #include <cstdio>
 #include <chrono>
 #include <thread>
+#include <functional>
+#include <list>
 
 const sf::Color PRIMARY_DARK = sf::Color(37, 61, 91);
 const sf::Color PRIMARY_LIGHT = sf::Color(239, 247, 246);
 const sf::Color SECONDARY_LIGHT = sf::Color(58, 51, 53); 
 const sf::Color SECONDARY_DARK = sf::Color(108, 142, 173); 
 const sf::Color PRIMARY_ACCENT = sf::Color(255, 58, 32);
+const sf::Vector2f first_button_pos = sf::Vector2f(50.f, 750.f);
+const float OFFSET = 50.f;
 
 const sf::Vector2f SORT_BUTTON_SIZE = sf::Vector2f(180.f, 50.f);
 const unsigned int BUTTON_TEXT_SIZE = 24;
@@ -18,14 +22,22 @@ const unsigned int BUTTON_PUSH_ANIMATION_DURATION = 150;
 
 sf::Font ROBOTO_MEDIUM;
 
+class Clickable : public sf::Drawable
+{
+    public:
+        virtual bool isUnderCursor(sf::RenderWindow& window) const = 0;
+        virtual void onClick(sf::RenderWindow& window) = 0;
+        virtual ~Clickable(){};
+};
 
 
 
-class rectButton : public sf::Drawable
+class rectButton : public Clickable
 {
     public:
         sf::RectangleShape base;
         sf::Text text;
+        std::function<void()> trigger;
         
         void setSize(sf::Vector2f base_size)
         {
@@ -36,7 +48,10 @@ class rectButton : public sf::Drawable
         {
             base = sf::RectangleShape();
             text = sf::Text();
+            trigger = std::function<void()>();
         }
+
+        ~rectButton() = default;
 
         void setColor(const sf::Color& base_color)
         {
@@ -54,17 +69,22 @@ class rectButton : public sf::Drawable
             text.setPosition(sf::Vector2f(pos.x + 4, pos.y + 10));
         }
 
-        sf::Vector2f getPosition()
+        void setTrigger(std::function<void()> trigger)
+        {
+            this->trigger = trigger;
+        }
+
+        sf::Vector2f getPosition() const
         {
             return base.getPosition();
         }
 
-        sf::Vector2f getSize()
+        sf::Vector2f getSize() const
         {
             return base.getSize();
         }
 
-        sf::Color getColor()
+        sf::Color getColor() const
         {
             return base.getFillColor();
         }
@@ -90,7 +110,7 @@ class rectButton : public sf::Drawable
             target.draw(text);
         }
 
-        bool isUnderCursor(sf::RenderWindow& window)
+        bool isUnderCursor(sf::RenderWindow& window) const override
         {
             sf::Vector2i local_position = sf::Mouse::getPosition(window);
             sf::Vector2f button_size  = getSize();
@@ -104,6 +124,12 @@ class rectButton : public sf::Drawable
                 return true;
             }
             return false;
+        }
+
+        void onClick(sf::RenderWindow& window) override
+        {
+            animatePush(window);
+            trigger();
         }
 
         void animatePush(sf::RenderWindow& window)
@@ -120,38 +146,38 @@ class rectButton : public sf::Drawable
             window.draw(*this);
             window.display();
         }
-
 };
 
-rectButton createSortStyledButton(const sf::Vector2f& pos, const char* string)
+rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
 {
-        rectButton button;
+        rectButton* button = new rectButton();
 
-        button.setColor(PRIMARY_DARK);
-        button.setSize(SORT_BUTTON_SIZE);
-        button.setPosition(pos);
-        button.setTextFont(ROBOTO_MEDIUM);
-        button.setTextColor(PRIMARY_LIGHT);
-        button.setTextSize(BUTTON_TEXT_SIZE);
-        button.setTextString(string);
+        button->setColor(PRIMARY_DARK);
+        button->setSize(SORT_BUTTON_SIZE);
+        button->setPosition(pos);
+        button->setTextFont(ROBOTO_MEDIUM);
+        button->setTextColor(PRIMARY_LIGHT);
+        button->setTextSize(BUTTON_TEXT_SIZE);
+        button->setTextString(string);
 
         return button;
 }
 
 int main() 
 {
+
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
     rect.setFillColor(SECONDARY_DARK);
+    std::list<Clickable*> clickable_objects;
 
-    rectButton buttons[5] = {};
     char button_names[5][20] = {"MergeSort", "QuickSort", "SelectionSort", "InsertionSort", "BubbleSort"};
-    sf::Vector2f first_button_pos = sf::Vector2f(50.f, 750.f);
     for(int i = 0; i < 5; ++i) 
     {
-        sf::Vector2f pos = sf::Vector2f(first_button_pos.x + i * SORT_BUTTON_SIZE.x + i * 50.f, first_button_pos.y);
-        buttons[i] = createSortStyledButton(pos, button_names[i]);
+        sf::Vector2f pos = sf::Vector2f(first_button_pos.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, first_button_pos.y);
+        rectButton* button = createSortStyledButton(pos, button_names[i]);
+        clickable_objects.push_back(button);
     }
 
     sf::Cursor hand_cursor;
@@ -171,21 +197,20 @@ int main()
         }
 
 
-        bool is_any_button_under_cursor = false;
-        for(int i = 0; i < 5; ++i) {
-            if(buttons[i].isUnderCursor(window))
+        bool is_any_clickable_under_cursor = false;
+        for(auto object : clickable_objects) {
+            if(object->isUnderCursor(window))
             {
-                is_any_button_under_cursor = true;
+                is_any_clickable_under_cursor = true;
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
-                    printf("Pressed button %d\n", i);
-                    buttons[i].animatePush(window);
+                    object->onClick(window);
                 }
                 break;
             }
         }
 
-        if(is_any_button_under_cursor)
+        if(is_any_clickable_under_cursor)
         {
             window.setMouseCursor(hand_cursor); 
         }
@@ -195,9 +220,9 @@ int main()
         }
 
         window.clear(PRIMARY_LIGHT); // clearing window with black color
-        for(int i =0; i < 5; ++i) 
+        for(auto& object : clickable_objects)
         {
-            window.draw(buttons[i]);
+            window.draw(*object);
         }
         window.draw(rect);
         window.display();
