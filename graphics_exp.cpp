@@ -9,11 +9,16 @@ const sf::Color SECONDARY_LIGHT = sf::Color(108, 142, 173);
 const sf::Color SECONDARY_DARK = sf::Color(58, 51, 53);
 const sf::Color PRIMARY_ACCENT = sf::Color(255, 58, 32);
 
-const sf::Vector2f SORT_BUTTON_SIZE = sf::Vector2f(120.f, 50.f);
+const sf::Vector2f SORT_BUTTON_SIZE = sf::Vector2f(180.f, 50.f);
 const unsigned int BUTTON_TEXT_SIZE = 24;
 const unsigned int BUTTON_PUSH_ANIMATION_DURATION = 150;
 
+
+
+
 sf::Font ROBOTO_MEDIUM;
+
+
 
 
 class rectButton : public sf::Drawable
@@ -101,20 +106,20 @@ class rectButton : public sf::Drawable
             return false;
         }
 
-    void animatePush(sf::RenderWindow& window)
-    {
-        sf::Color old_color = getColor();
-        setColor(sf::Color(old_color.r - 20, old_color.g - 20, old_color.b - 20)); // process values for dark buttons < 20
-        
-        window.draw(*this);
-        window.display();
+        void animatePush(sf::RenderWindow& window)
+        {
+            sf::Color old_color = getColor();
+            setColor(sf::Color(old_color.r - 20, old_color.g - 20, old_color.b - 20)); // process values for dark buttons < 20
+            
+            window.draw(*this);
+            window.display();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(BUTTON_PUSH_ANIMATION_DURATION));
-        setColor(old_color);
+            std::this_thread::sleep_for(std::chrono::milliseconds(BUTTON_PUSH_ANIMATION_DURATION));
+            setColor(old_color);
 
-        window.draw(*this);
-        window.display();
-    }
+            window.draw(*this);
+            window.display();
+        }
 
 };
 
@@ -139,7 +144,15 @@ int main()
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
     rect.setFillColor(SECONDARY_DARK);
-    rectButton button = createSortStyledButton(sf::Vector2f(50.f, 750.f), "MergeSort");
+
+    rectButton buttons[5] = {};
+    char button_names[5][20] = {"MergeSort", "QuickSort", "SelectionSort", "InsertionSort", "BubbleSort"};
+    sf::Vector2f first_button_pos = sf::Vector2f(50.f, 750.f);
+    for(int i = 0; i < 5; ++i) 
+    {
+        sf::Vector2f pos = sf::Vector2f(first_button_pos.x + i * SORT_BUTTON_SIZE.x + i * 50.f, first_button_pos.y);
+        buttons[i] = createSortStyledButton(pos, button_names[i]);
+    }
 
     sf::Cursor hand_cursor;
     sf::Cursor arrow_cursor;
@@ -159,24 +172,38 @@ int main()
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            if(button.isUnderCursor(window));
+            for(int i = 0; i < 5; ++i) 
             {
-                button.animatePush(window);
+                if(buttons[i].isUnderCursor(window));
+                {
+                    buttons[i].animatePush(window);
+                }
             }
         }
 
-
-        if(button.isUnderCursor(window))
-        {
-            window.setMouseCursor(hand_cursor);
+        bool is_any_button_under_cursor = false;
+        for(int i = 0; i < 5; ++i) {
+            if(buttons[i].isUnderCursor(window))
+            {
+                is_any_button_under_cursor = true;
+                break;
+            }
         }
-        else 
+
+        if(is_any_button_under_cursor)
+        {
+            window.setMouseCursor(hand_cursor); 
+        }
+        else
         {
             window.setMouseCursor(arrow_cursor);
         }
 
         window.clear(PRIMARY_LIGHT); // clearing window with black color
-        window.draw(button);
+        for(int i =0; i < 5; ++i) 
+        {
+            window.draw(buttons[i]);
+        }
         window.draw(rect);
         window.display();
 
