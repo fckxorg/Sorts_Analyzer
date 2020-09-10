@@ -84,12 +84,15 @@ int main()
     std::queue<Event*> event_queue;
     std::list<Clickable*> clickable_objects;
 
-    Figure plot = Figure(sf::Vector2f(600.f, 600.f), sf::Vector2f(50.f, 50.f), PRIMARY_LIGHT);
+    Figure plot = Figure(sf::Vector2f(600.f, 600.f), sf::Vector2f(50.f, 50.f), PRIMARY_LIGHT, "bababa", "bebebe");
     plot.axisX.setLabelFont(ROBOTO_MEDIUM);
+    plot.axisY.setLabelFont(ROBOTO_MEDIUM);
     plot.axisX.setLabelSize(15);
-    plot.axisX.setLabelString("bebebe");
-    plot.axisX.setLabelPosition(sf::Vector2f(300.f, 625.f));
+    plot.axisY.setLabelSize(15);
+    plot.axisX.setLabelPosition(sf::Vector2f(300.f, 615.f));
+    plot.axisY.setLabelPosition(sf::Vector2f(65.f, 350.f));
     plot.axisX.setLabelColor(sf::Color::Black);
+    plot.axisY.setLabelColor(sf::Color::Black);
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background

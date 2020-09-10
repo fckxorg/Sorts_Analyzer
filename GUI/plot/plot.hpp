@@ -44,6 +44,10 @@ class Axis : public sf::Drawable
         void setLabelPosition(const sf::Vector2f& pos)
         {
             label.setPosition(pos);
+            if(axis[0].position.x == axis[1].position.x)
+            {
+                label.rotate(-90.f);
+            }
         }
 
         void setLabelColor(const sf::Color& color)
@@ -67,10 +71,10 @@ class Figure : public sf::Drawable
         Axis axisY;
         Plot plot;
 
-        Figure(sf::Vector2f size, sf::Vector2f pos, sf::Color color)
+        Figure(sf::Vector2f size, sf::Vector2f pos, sf::Color base_color, const char* x_label, const char* y_label)
         {
             setSize(size);
-            setColor(color);
+            setColor(base_color);
             setPosition(pos);
 
             sf::Vector2f axisX_start = sf::Vector2f(pos.x + OFFSET, pos.y + size.y - OFFSET);
@@ -81,6 +85,9 @@ class Figure : public sf::Drawable
 
             axisX = Axis(axisX_start, axisX_end);
             axisY = Axis(axisY_start, axisY_end);
+
+            axisX.setLabelString(x_label);
+            axisY.setLabelString(y_label);
 
         }
 
@@ -118,7 +125,7 @@ class Figure : public sf::Drawable
         {
             target.draw(base);
             target.draw(axisX);
-            //target.draw(axisY);
+            target.draw(axisY);
         }
 
 
