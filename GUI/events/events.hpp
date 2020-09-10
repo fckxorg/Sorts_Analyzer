@@ -13,6 +13,19 @@ class Event
         virtual void handle(sf::RenderWindow& window) = 0;
 };
 
+class NoHoveredClickable : public Event
+{
+    public:
+    ~NoHoveredClickable() = default;
+    NoHoveredClickable() = default;
+    void handle(sf::RenderWindow& window) override
+    {
+        sf::Cursor arrow_cursor;
+        arrow_cursor.loadFromSystem(sf::Cursor::Arrow);
+        window.setMouseCursor(arrow_cursor);
+    }
+};
+
 class HoveredClickable : public Event
 {
     public:

@@ -49,6 +49,12 @@ void generateEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue, s
             break;
         }
     }
+
+    if(!IS_ANY_CLICKABLE_UNDER_CURSOR)
+    {
+        NoHoveredClickable* event = new NoHoveredClickable();
+        event_queue.push(event);
+    } 
 }
 
 void handleEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue)
@@ -100,11 +106,6 @@ int main()
         IS_ANY_CLICKABLE_UNDER_CURSOR = false;
         generateEvents(window, event_queue, clickable_objects, IS_ANY_CLICKABLE_UNDER_CURSOR);
         handleEvents(window, event_queue);
-       
-        if(!IS_ANY_CLICKABLE_UNDER_CURSOR)
-        {
-            window.setMouseCursor(arrow_cursor);
-        }
 
         window.clear(PRIMARY_LIGHT); // clearing window with black color
         for(auto& object : clickable_objects)
