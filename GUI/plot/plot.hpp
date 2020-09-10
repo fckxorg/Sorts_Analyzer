@@ -71,7 +71,13 @@ class Figure : public sf::Drawable
         Axis axisY;
         Plot plot;
 
-        Figure(sf::Vector2f size, sf::Vector2f pos, sf::Color base_color, const char* x_label, const char* y_label)
+        Figure (const sf::Vector2f size, 
+                const sf::Vector2f pos, 
+                const char* x_label, const char* y_label, 
+                sf::Font& font,
+                const sf::Color& base_color = sf::Color::White,
+                const unsigned int& label_size = 15,
+                const sf::Color& label_color = sf::Color::Black)
         {
             setSize(size);
             setColor(base_color);
@@ -88,6 +94,18 @@ class Figure : public sf::Drawable
 
             axisX.setLabelString(x_label);
             axisY.setLabelString(y_label);
+
+            axisX.setLabelSize(label_size);
+            axisY.setLabelSize(label_size);
+
+            axisX.setLabelColor(label_color);
+            axisY.setLabelColor(label_color);
+
+            axisX.setLabelFont(font);
+            axisY.setLabelFont(font);
+
+            axisX.setLabelPosition(sf::Vector2f((axisX_start.x + axisX_end.x) / 2, axisX_start.y + LABEL_OFFSET));
+            axisY.setLabelPosition(sf::Vector2f(axisY_start.x - 2 * LABEL_OFFSET, (axisY_start.y + axisY_end.y) / 2));
 
         }
 

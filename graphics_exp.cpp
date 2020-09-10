@@ -14,13 +14,6 @@
 #include "GUI/plot/plot.hpp"
 sf::Font ROBOTO_MEDIUM;
 
-bool cmpf(float A, float B, float epsilon = 0.005f)
-{
-    return (fabs(A - B) < epsilon);
-}
-
-
-
 rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
 {
         assert(string != nullptr);
@@ -84,15 +77,7 @@ int main()
     std::queue<Event*> event_queue;
     std::list<Clickable*> clickable_objects;
 
-    Figure plot = Figure(sf::Vector2f(600.f, 600.f), sf::Vector2f(50.f, 50.f), PRIMARY_LIGHT, "bababa", "bebebe");
-    plot.axisX.setLabelFont(ROBOTO_MEDIUM);
-    plot.axisY.setLabelFont(ROBOTO_MEDIUM);
-    plot.axisX.setLabelSize(15);
-    plot.axisY.setLabelSize(15);
-    plot.axisX.setLabelPosition(sf::Vector2f(300.f, 615.f));
-    plot.axisY.setLabelPosition(sf::Vector2f(65.f, 350.f));
-    plot.axisX.setLabelColor(sf::Color::Black);
-    plot.axisY.setLabelColor(sf::Color::Black);
+    Figure plot = Figure(PLOT_FIGURE_SIZE, sf::Vector2f(50.f, 50.f),"bababa", "bebebe", ROBOTO_MEDIUM, PRIMARY_LIGHT);
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
@@ -101,7 +86,7 @@ int main()
     char button_names[5][20] = {"MergeSort", "QuickSort", "SelectionSort", "InsertionSort", "BubbleSort"};
     for(int i = 0; i < 5; ++i) 
     {
-        sf::Vector2f pos = sf::Vector2f(first_button_pos.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, first_button_pos.y);
+        sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
         rectButton* button = createSortStyledButton(pos, button_names[i]);
         clickable_objects.push_back(button);
     }
