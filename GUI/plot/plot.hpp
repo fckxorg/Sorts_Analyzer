@@ -12,6 +12,7 @@ class Axis : public sf::Drawable
 {
     public:
         sf::VertexArray axis;
+        sf::Text label;
 
         Axis(){}
 
@@ -25,9 +26,35 @@ class Axis : public sf::Drawable
            
         }
 
+        void setLabelString(const char* string)
+        {
+            label.setString(string);
+        }
+
+        void setLabelFont(sf::Font& font)
+        {
+            label.setFont(font);
+        }
+
+        void setLabelSize(const unsigned int& size)
+        {
+            label.setCharacterSize(size);
+        }
+
+        void setLabelPosition(const sf::Vector2f& pos)
+        {
+            label.setPosition(pos);
+        }
+
+        void setLabelColor(const sf::Color& color)
+        {
+            label.setFillColor(color);
+        }
+
         void draw (sf::RenderTarget& target, sf::RenderStates states) const override
         {
             target.draw(axis);
+            target.draw(label);
         }
 
 };
@@ -54,6 +81,7 @@ class Figure : public sf::Drawable
 
             axisX = Axis(axisX_start, axisX_end);
             axisY = Axis(axisY_start, axisY_end);
+
         }
 
         void setSize(sf::Vector2f base_size)
@@ -86,12 +114,11 @@ class Figure : public sf::Drawable
             return base.getFillColor();
         }
 
-
         void draw (sf::RenderTarget& target, sf::RenderStates states) const override
         {
             target.draw(base);
             target.draw(axisX);
-            target.draw(axisY);
+            //target.draw(axisY);
         }
 
 

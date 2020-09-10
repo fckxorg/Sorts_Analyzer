@@ -11,6 +11,7 @@
 #include "GUI/constants/constants.hpp"
 #include "GUI/controls/controls.hpp"
 #include "GUI/events/events.hpp"
+#include "GUI/plot/plot.hpp"
 sf::Font ROBOTO_MEDIUM;
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
@@ -57,100 +58,6 @@ void generateEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue, s
     }
 }
 
-class Plot 
-{
-
-};
-
-class Axis : public sf::Drawable
-{
-    public:
-        sf::VertexArray axis;
-
-        Axis(){}
-
-        Axis(sf::Vector2f axis_start, sf::Vector2f axis_end)
-        {
-            axis = sf::VertexArray(sf::Lines, 2);
-            axis[0].position = axis_start;
-            axis[1].position = axis_end;
-            axis[0].color = sf::Color::Black;
-            axis[1].color = sf::Color::Black;
-           
-        }
-
-        void draw (sf::RenderTarget& target, sf::RenderStates states) const override
-        {
-            target.draw(axis);
-        }
-
-};
-
-class Figure : public sf::Drawable
-{
-    public:
-        sf::RectangleShape base;
-        Axis axisX;
-        Axis axisY;
-        Plot plot;
-
-        Figure(sf::Vector2f size, sf::Vector2f pos, sf::Color color)
-        {
-            setSize(size);
-            setColor(color);
-            setPosition(pos);
-
-            sf::Vector2f axisX_start = sf::Vector2f(pos.x + OFFSET, pos.y + size.y - OFFSET);
-            sf::Vector2f axisX_end = sf::Vector2f(axisX_start.x + size.x - 2 * OFFSET, axisX_start.y);
-
-            sf::Vector2f axisY_start = axisX_start;
-            sf::Vector2f axisY_end = sf::Vector2f(axisY_start.x, axisY_start.y - size.y + 2 * OFFSET);
-
-            axisX = Axis(axisX_start, axisX_end);
-            axisY = Axis(axisY_start, axisY_end);
-        }
-
-        void setSize(sf::Vector2f base_size)
-        {
-            base.setSize(base_size);
-        }
-
-        void setColor(const sf::Color& base_color)
-        {
-            base.setFillColor(base_color);
-        }
-
-        void setPosition(const sf::Vector2f& pos)
-        {
-            base.setPosition(pos); // add boundary cases
-        }
-
-        sf::Vector2f getPosition() const
-        {
-            return base.getPosition();
-        }
-
-        sf::Vector2f getSize() const
-        {
-            return base.getSize();
-        }
-
-        sf::Color getColor() const
-        {
-            return base.getFillColor();
-        }
-
-
-        void draw (sf::RenderTarget& target, sf::RenderStates states) const override
-        {
-            target.draw(base);
-            target.draw(axisX);
-            target.draw(axisY);
-        }
-
-
-};
-
 void handleEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue)
 {
     sf::Event event;
@@ -178,6 +85,11 @@ int main()
     std::list<Clickable*> clickable_objects;
 
     Figure plot = Figure(sf::Vector2f(600.f, 600.f), sf::Vector2f(50.f, 50.f), PRIMARY_LIGHT);
+    plot.axisX.setLabelFont(ROBOTO_MEDIUM);
+    plot.axisX.setLabelSize(15);
+    plot.axisX.setLabelString("bebebe");
+    plot.axisX.setLabelPosition(sf::Vector2f(300.f, 625.f));
+    plot.axisX.setLabelColor(sf::Color::Black);
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
