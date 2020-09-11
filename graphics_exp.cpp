@@ -79,8 +79,8 @@ int main()
 {
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
 
-    int x_vals[5] = {0, 1, 2, 3, 4};
-    int y_vals[5] = {0, 1, 4, 9, 16};
+    int x_vals[] = {0, 1, 2, 3, 4, 5};
+    int y_vals[] = {0, 1, 4, 9, 16, 25};
 
     int linear_x[5] = {0, 1, 2, 3, 4};
     int linear_y[5] = {0, 1, 2, 3, 4};
@@ -90,8 +90,8 @@ int main()
     std::list<Clickable*> clickable_objects;
 
     Figure plot = Figure(PLOT_FIGURE_SIZE, sf::Vector2f(50.f, 50.f),"bababa", "bebebe", ROBOTO_MEDIUM, PRIMARY_LIGHT);
-    plot.plotData(x_vals, y_vals, 5, sf::Color::Red);
     plot.plotData(linear_x, linear_y, 5, sf::Color::Blue);
+    plot.plotData(x_vals, y_vals, 6, sf::Color::Red);
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background

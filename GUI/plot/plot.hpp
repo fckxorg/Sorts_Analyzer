@@ -22,13 +22,23 @@ class Plot : public sf::Drawable
     private:
         sf::VertexArray plot;
         int n_elements;
-        int max_unscaled_value;
         sf::Vector2f start_point;
+
+        float scale_value(const float value, const float step, const float offset)
+        {
+            return value * step + offset;
+        }
+        
+        float unscale_value(const float value, const float step, const float offset)
+        {
+            return (value - offset) / step;
+        }
+
     public:
 
         Plot(){};
 
-        Plot(sf::Vector2f start_point, const int* x_values, const int* y_values, const int n_elements, const float x_step, const float y_step, sf::Color color) : start_point(start_point)
+        Plot(sf::Vector2f start_point, const int* x_values, const int* y_values, const int n_elements, const float x_step, const float y_step, sf::Color color) : start_point(start_point), n_elements(n_elements)
         {
             assert(x_values != nullptr);
             assert(y_values != nullptr);
@@ -37,17 +47,23 @@ class Plot : public sf::Drawable
 
             printf("Plot vertices: \n");
             for(int i = 0; i < n_elements; ++i) {
-                float curr_x_val = static_cast<float>(x_values[i]) * x_step + start_point.x;
-                float curr_y_val = static_cast<float>(y_values[i]) * y_step + start_point.y;
+                float curr_x_val = scale_value(x_values[i], x_step, start_point.x);
+                float curr_y_val = scale_value(y_values[i], y_step, start_point.y);
                 printf("(%.2f, %.2f)\n", curr_x_val, curr_y_val);
                 plot[i].position = sf::Vector2f(curr_x_val, curr_y_val);
                 plot[i].color = color;
             }   
         }
 
-        void rescale(const float* x_values, const float* y_value)
+        void rescale(const float new_x_step, const float new_y_step, const float old_x_step, const float old_y_step)
         {
+            for(int i = 0; i < n_elements; ++i)
+            {
+                printf("Iteration %d\n", i);
+                plot[i].position.x = scale_value(unscale_value(plot[i].position.x, old_x_step, start_point.x), new_x_step, start_point.x);
+                plot[i].position.y = scale_value(unscale_value(plot[i].position.y, old_y_step, start_point.y), new_y_step, start_point.y);
 
+            }
         }
 
         void draw (sf::RenderTarget& target, sf::RenderStates states) const override
@@ -173,13 +189,25 @@ class Figure : public sf::Drawable
             if(new_plot_x_max_value > x_max_value) 
             {
                 x_max_value = new_plot_x_max_value;
-                x_step = (axisX.axis[1].position.x - axisX.axis[0].position.x) / static_cast<float>(x_max_value);
+                float new_x_step = (axisX.axis[1].position.x - axisX.axis[0].position.x) / static_cast<float>(x_max_value);
+                for(auto& plot : plots) 
+                {
+                    plot.rescale(new_x_step, y_step, x_step, y_step);
+                }
+
+                x_step = new_x_step;
             }
 
             if(new_plot_y_max_value > y_max_value)
             {
                 y_max_value = new_plot_y_max_value;
-                y_step = (axisY.axis[1].position.y - axisY.axis[0].position.y) / static_cast<float>(y_max_value);
+                float new_y_step = (axisY.axis[1].position.y - axisY.axis[0].position.y) / static_cast<float>(y_max_value);
+                for(auto& plot : plots) 
+                {
+                    plot.rescale(x_step, new_y_step, x_step, y_step);
+                }
+
+                y_step = new_y_step;
             }
 
             printf("Figure adjusted max values are x: %d, y: %d\n", x_max_value, y_max_value);
