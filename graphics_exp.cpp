@@ -79,11 +79,19 @@ int main()
 {
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
 
+    int x_vals[5] = {0, 1, 2, 3, 4};
+    int y_vals[5] = {0, 1, 4, 9, 16};
+
+    int linear_x[5] = {0, 1, 2, 3, 4};
+    int linear_y[5] = {0, 1, 2, 3, 4};
+
     bool IS_ANY_CLICKABLE_UNDER_CURSOR = false;
     std::queue<Event*> event_queue;
     std::list<Clickable*> clickable_objects;
 
     Figure plot = Figure(PLOT_FIGURE_SIZE, sf::Vector2f(50.f, 50.f),"bababa", "bebebe", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+    plot.plotData(x_vals, y_vals, 5, sf::Color::Red);
+    plot.plotData(linear_x, linear_y, 5, sf::Color::Blue);
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
@@ -97,17 +105,13 @@ int main()
         clickable_objects.push_back(button);
     }
 
-    sf::Cursor arrow_cursor;
-    arrow_cursor.loadFromSystem(sf::Cursor::Arrow);
-
-
     while (window.isOpen())
     {
         IS_ANY_CLICKABLE_UNDER_CURSOR = false;
         generateEvents(window, event_queue, clickable_objects, IS_ANY_CLICKABLE_UNDER_CURSOR);
         handleEvents(window, event_queue);
 
-        window.clear(PRIMARY_LIGHT); // clearing window with black color
+        window.clear(PRIMARY_LIGHT); 
         for(auto& object : clickable_objects)
         {
             window.draw(*object);

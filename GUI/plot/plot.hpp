@@ -2,9 +2,58 @@
 #define PLOT_HPP
 
 #include <SFML/Graphics.hpp>
+#include <list>
 
-class Plot 
+int max_in_array(const int* array, const int n_elements)
 {
+    int max_elem = array[0];
+    for(int i = 1; i < n_elements; ++i)
+    {
+        if(array[i] > max_elem)
+        {
+            max_elem = array[i];
+        }
+    }
+    return max_elem;
+}
+
+class Plot : public sf::Drawable
+{
+    private:
+        sf::VertexArray plot;
+        int n_elements;
+        int max_unscaled_value;
+        sf::Vector2f start_point;
+    public:
+
+        Plot(){};
+
+        Plot(sf::Vector2f start_point, const int* x_values, const int* y_values, const int n_elements, const float x_step, const float y_step, sf::Color color) : start_point(start_point)
+        {
+            assert(x_values != nullptr);
+            assert(y_values != nullptr);
+
+            plot = sf::VertexArray(sf::LineStrip, n_elements);
+
+            printf("Plot vertices: \n");
+            for(int i = 0; i < n_elements; ++i) {
+                float curr_x_val = static_cast<float>(x_values[i]) * x_step + start_point.x;
+                float curr_y_val = static_cast<float>(y_values[i]) * y_step + start_point.y;
+                printf("(%.2f, %.2f)\n", curr_x_val, curr_y_val);
+                plot[i].position = sf::Vector2f(curr_x_val, curr_y_val);
+                plot[i].color = color;
+            }   
+        }
+
+        void rescale(const float* x_values, const float* y_value)
+        {
+
+        }
+
+        void draw (sf::RenderTarget& target, sf::RenderStates states) const override
+        {
+            target.draw(plot);
+        }
 
 };
 
@@ -69,7 +118,11 @@ class Figure : public sf::Drawable
         sf::RectangleShape base;
         Axis axisX;
         Axis axisY;
-        Plot plot;
+        std::list<Plot> plots;
+        int y_max_value;
+        int x_max_value;
+        float x_step;
+        float y_step;
 
         Figure (const sf::Vector2f size, 
                 const sf::Vector2f pos, 
@@ -77,7 +130,7 @@ class Figure : public sf::Drawable
                 sf::Font& font,
                 const sf::Color& base_color = sf::Color::White,
                 const unsigned int& label_size = 15,
-                const sf::Color& label_color = sf::Color::Black)
+                const sf::Color& label_color = sf::Color::Black) : x_max_value(0), y_max_value(0)
         {
             setSize(size);
             setColor(base_color);
@@ -107,6 +160,33 @@ class Figure : public sf::Drawable
             axisX.setLabelPosition(sf::Vector2f((axisX_start.x + axisX_end.x) / 2, axisX_start.y + LABEL_OFFSET));
             axisY.setLabelPosition(sf::Vector2f(axisY_start.x - 2 * LABEL_OFFSET, (axisY_start.y + axisY_end.y) / 2));
 
+        }
+
+        void plotData(const int* x_values, const int* y_values, const int n_values, const sf::Color color)
+        {
+            printf("Plotting data...\n");
+            const int new_plot_x_max_value = static_cast<float>(max_in_array(x_values, n_values));
+            const int new_plot_y_max_value = static_cast<float>(max_in_array(y_values, n_values));
+
+            printf("Data max values are x: %d, y: %d\n", new_plot_x_max_value, new_plot_y_max_value);
+
+            if(new_plot_x_max_value > x_max_value) 
+            {
+                x_max_value = new_plot_x_max_value;
+                x_step = (axisX.axis[1].position.x - axisX.axis[0].position.x) / static_cast<float>(x_max_value);
+            }
+
+            if(new_plot_y_max_value > y_max_value)
+            {
+                y_max_value = new_plot_y_max_value;
+                y_step = (axisY.axis[1].position.y - axisY.axis[0].position.y) / static_cast<float>(y_max_value);
+            }
+
+            printf("Figure adjusted max values are x: %d, y: %d\n", x_max_value, y_max_value);
+
+            printf("Figure adjusted steps are x_step: %.2f, y_step: %.2f\n", x_step, y_step);
+            printf("Creating plot...\n");
+            plots.push_back(Plot(axisX.axis[0].position, x_values, y_values, n_values, x_step, y_step, color));
         }
 
         void setSize(sf::Vector2f base_size)
@@ -144,9 +224,12 @@ class Figure : public sf::Drawable
             target.draw(base);
             target.draw(axisX);
             target.draw(axisY);
+
+            for(auto& plot : plots)
+            {
+                target.draw(plot);
+            }
         }
-
-
 };
 
 #endif
