@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 
+#include "../controls/controls.hpp"
+
 int max_in_array(const int* array, const int n_elements)
 {
     int max_elem = array[0];
@@ -17,12 +19,14 @@ int max_in_array(const int* array, const int n_elements)
     return max_elem;
 }
 
-class Plot : public sf::Drawable
+class Plot : public Clickable
 {
     private:
         sf::VertexArray plot;
         int n_elements;
         sf::Vector2f start_point;
+        float max_y_coord;
+        float max_x_coord;
 
         float scale_value(const float value, const float step, const float offset)
         {
@@ -38,7 +42,13 @@ class Plot : public sf::Drawable
 
         Plot(){};
 
-        Plot(sf::Vector2f start_point, const int* x_values, const int* y_values, const int n_elements, const float x_step, const float y_step, sf::Color color) : start_point(start_point), n_elements(n_elements)
+        Plot(sf::Vector2f start_point, 
+            const int* x_values, 
+            const int* y_values, 
+            const int n_elements, 
+            const float x_step, 
+            const float y_step, 
+            sf::Color color) : start_point(start_point), n_elements(n_elements), max_x_coord(0), max_y_coord(0)
         {
             assert(x_values != nullptr);
             assert(y_values != nullptr);
@@ -49,6 +59,10 @@ class Plot : public sf::Drawable
             for(int i = 0; i < n_elements; ++i) {
                 float curr_x_val = scale_value(x_values[i], x_step, start_point.x);
                 float curr_y_val = scale_value(y_values[i], y_step, start_point.y);
+
+                max_x_coord = max_x_coord < curr_x_val ? curr_x_val : max_x_coord;
+                max_y_coord = max_y_coord < curr_y_val ? curr_y_val : max_y_coord;
+
                 printf("(%.2f, %.2f)\n", curr_x_val, curr_y_val);
                 plot[i].position = sf::Vector2f(curr_x_val, curr_y_val);
                 plot[i].color = color;
@@ -69,6 +83,31 @@ class Plot : public sf::Drawable
         void draw (sf::RenderTarget& target, sf::RenderStates states) const override
         {
             target.draw(plot);
+        }
+
+        bool isUnderCursor(sf::RenderWindow& window) const override 
+        {
+            for(int i = 1; i < n_elements; ++i)
+            {
+                sf::Vector2f first_vertex = plot[i].position;
+                sf::Vector2f second_vertex = plot[i - 1].position;
+                
+                float k_coeff = (first_vertex.y - second_vertex.y) / (first_vertex.x - second_vertex.x);
+                float b_coeff = first_vertex.y - k_coeff * first_vertex.x;
+
+                sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
+
+                if(abs(mouse_position.y - mouse_position.x * k_coeff - b_coeff) < EPSILON && mouse_position.x < max_x_coord && mouse_position.y < max_y_coord)
+                {
+                    printf("Hovered plot at (%d, %d)\n", mouse_position.x, mouse_position.y);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        virtual void onClick(sf::RenderWindow& window) override 
+        {
         }
 
 };

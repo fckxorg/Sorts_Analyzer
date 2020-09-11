@@ -105,6 +105,10 @@ int main()
         clickable_objects.push_back(button);
     }
 
+    clickable_objects.push_back(&plot.plots.front());
+    clickable_objects.push_back(&plot.plots.back());
+
+
     while (window.isOpen())
     {
         IS_ANY_CLICKABLE_UNDER_CURSOR = false;

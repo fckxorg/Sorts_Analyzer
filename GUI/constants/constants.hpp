@@ -15,6 +15,7 @@ const sf::Vector2f PLOT_FIGURE_SIZE = sf::Vector2f(600.f, 600.f);
 
 const float OFFSET = 50.f;
 const float LABEL_OFFSET = 15.f;
+const float EPSILON = 10.f;
 
 const unsigned int BUTTON_TEXT_SIZE = 24;
 const unsigned int BUTTON_PUSH_ANIMATION_DURATION = 150;
