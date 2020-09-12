@@ -6,6 +6,25 @@
 
 #include "../controls/controls.hpp"
 
+class Tick : public sf::Drawable
+{
+    private:
+        sf::RectangleShape tick;
+        sf::Text label;
+    public:
+        Tick(sf::Vector2f pos, sf::Vector2f size, sf::Text label) : label(label)
+        {
+            tick.setPosition(pos);
+            tick.setFillColor(sf::Color::Black);
+            tick.setSize(size);
+        }
+
+    void draw (sf::RenderTarget& target, sf::RenderStates states) const override
+    {
+        target.draw(tick);
+    }
+};
+
 int max_in_array(const int* array, const int n_elements)
 {
     int max_elem = array[0];
@@ -196,6 +215,8 @@ class Figure : public sf::Drawable
         Axis axisX;
         Axis axisY;
         std::list<Plot> plots;
+        std::list<Tick> x_ticks;
+        std::list<Tick> y_ticks;
         int y_max_value;
         int x_max_value;
         float x_step;
@@ -276,6 +297,17 @@ class Figure : public sf::Drawable
             printf("Figure adjusted steps are x_step: %.2f, y_step: %.2f\n", x_step, y_step);
             printf("Creating plot...\n");
             plots.push_back(Plot(axisX.axis[0].position, x_values, y_values, n_values, x_step, y_step, color));
+
+            for(int i = 0; i < 11; ++i)
+            {
+                const float x_tick_step = (axisX.axis[1].position.x - axisX.axis[0].position.x) / 10;
+                sf::Vector2f x_tick_pos = sf::Vector2f(x_tick_step * i + axisX.axis[0].position.x, axisX.axis[0].position.y);
+                x_ticks.push_back(Tick(x_tick_pos, sf::Vector2f(2.f, 10.f), sf::Text()));
+
+                const float y_tick_step = (axisY.axis[1].position.y - axisY.axis[0].position.y) / 10;
+                sf::Vector2f y_tick_pos = sf::Vector2f(axisY.axis[0].position.x - 10.f, axisY.axis[0].position.y + y_tick_step * i);
+                y_ticks.push_back(Tick(y_tick_pos, sf::Vector2f(10.f, 2.f), sf::Text()));
+            }
         }
 
         void setSize(sf::Vector2f base_size)
@@ -317,6 +349,16 @@ class Figure : public sf::Drawable
             for(auto& plot : plots)
             {
                 target.draw(plot);
+            }
+
+            for(auto& tick : x_ticks)
+            {
+                target.draw(tick);
+            }
+
+            for(auto& tick : y_ticks)
+            {
+                target.draw(tick);
             }
         }
 };
