@@ -29,6 +29,7 @@ class Plot : public Clickable
         float max_x_coord;
         float x_step;
         float y_step;
+        char hint_buffer[10];
 
         float scale_value(const float value, const float step, const float offset)
         {
@@ -102,7 +103,6 @@ class Plot : public Clickable
 
                 if(abs(mouse_position.y - mouse_position.x * k_coeff - b_coeff) < EPSILON && mouse_position.x < max_x_coord && mouse_position.y < max_y_coord)
                 {
-                    printf("Hovered plot at (%d, %d)\n", mouse_position.x, mouse_position.y);
                     return true;
                 }
             }
@@ -111,9 +111,6 @@ class Plot : public Clickable
 
         virtual void onClick(sf::RenderWindow& window) override 
         {
-
-            char hint_buffer[10] = {};
-
             sf::Font ROBOTO_MEDIUM;
             ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
             sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
@@ -123,7 +120,10 @@ class Plot : public Clickable
             hint.setPosition(mouse_position.x + 15.f, mouse_position.y);
             hint.setCharacterSize(15);
 
-            sprintf(hint_buffer, "(%d, %d)", mouse_position.x, mouse_position.y);
+            float unscaled_x = unscale_value(mouse_position.x, x_step, start_point.x);
+            float unscaled_y = unscale_value(mouse_position.y, y_step, start_point.y);
+
+            sprintf(hint_buffer, "(%.1f, %.1f)", unscaled_x, unscaled_y);
 
             hint.setString(hint_buffer);
 
