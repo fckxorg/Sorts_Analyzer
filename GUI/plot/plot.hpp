@@ -210,6 +210,75 @@ class Axis : public sf::Drawable
 
 class Figure : public sf::Drawable
 {
+    private:
+        float selectTickStep(float max_value)
+        {
+            for(int i = 0; i < N_TICK_STEPS; ++i)
+            {
+                float n_markers = max_value / TICK_STEPS[i];
+                if(n_markers > 5 && n_markers <= 10)
+                {
+                    return TICK_STEPS[i];
+                }
+            }
+
+            return TICK_STEPS[N_TICK_STEPS - 1];
+        }
+
+        void rescale_X(const int new_x_max_value) 
+        {
+            float new_x_step = (axisX.axis[1].position.x - axisX.axis[0].position.x) / static_cast<float>(x_max_value);
+            for(auto& plot : plots) 
+            {
+                plot.rescale(new_x_step, y_step, x_step, y_step);
+            }
+
+            x_step = new_x_step;
+        }
+
+        void rescale_Y(const int new_y_max_value)
+        {
+            float new_y_step = (axisY.axis[1].position.y - axisY.axis[0].position.y) / static_cast<float>(y_max_value);
+            for(auto& plot : plots) 
+            {
+                plot.rescale(x_step, new_y_step, x_step, y_step);
+            }
+            y_step = new_y_step;
+        }
+
+        void rescale_ticks(const float max_value, bool y_axis)
+        {
+
+            float step = 0;
+            sf::Vector2f start_pos = axisX.axis[0].position;
+
+            if(y_axis)
+            {
+                y_ticks.clear();
+                step = y_step;
+            }
+            else 
+            {
+                x_ticks.clear();
+                step = x_step;
+            }
+            const float tick_step = selectTickStep(max_value);
+
+            for(float i = 0; i < max_value; i += tick_step)
+            {
+                sf::Vector2f tick_pos = sf::Vector2f(i * step + start_pos.x, start_pos.y);
+
+                if(y_axis)
+                {
+                    y_ticks.push_back(Tick(tick_pos, TICK_SIZE, sf::Text()));
+                }
+                else 
+                {
+                    x_ticks.push_back(Tick(tick_pos, TICK_SIZE, sf::Text()));
+                }
+            }
+        }
+
     public:
         sf::RectangleShape base;
         Axis axisX;
@@ -269,45 +338,19 @@ class Figure : public sf::Drawable
             printf("Data max values are x: %d, y: %d\n", new_plot_x_max_value, new_plot_y_max_value);
 
             if(new_plot_x_max_value > x_max_value) 
-            {
+            {   
                 x_max_value = new_plot_x_max_value;
-                float new_x_step = (axisX.axis[1].position.x - axisX.axis[0].position.x) / static_cast<float>(x_max_value);
-                for(auto& plot : plots) 
-                {
-                    plot.rescale(new_x_step, y_step, x_step, y_step);
-                }
-
-                x_step = new_x_step;
+                rescale_X(new_plot_x_max_value);
+                rescale_ticks(x_max_value, false);
             }
 
             if(new_plot_y_max_value > y_max_value)
             {
                 y_max_value = new_plot_y_max_value;
-                float new_y_step = (axisY.axis[1].position.y - axisY.axis[0].position.y) / static_cast<float>(y_max_value);
-                for(auto& plot : plots) 
-                {
-                    plot.rescale(x_step, new_y_step, x_step, y_step);
-                }
-
-                y_step = new_y_step;
+                rescale_Y(new_plot_y_max_value);
+                rescale_ticks(y_max_value, true);
             }
-
-            printf("Figure adjusted max values are x: %d, y: %d\n", x_max_value, y_max_value);
-
-            printf("Figure adjusted steps are x_step: %.2f, y_step: %.2f\n", x_step, y_step);
-            printf("Creating plot...\n");
             plots.push_back(Plot(axisX.axis[0].position, x_values, y_values, n_values, x_step, y_step, color));
-
-            for(int i = 0; i < 11; ++i)
-            {
-                const float x_tick_step = (axisX.axis[1].position.x - axisX.axis[0].position.x) / 10;
-                sf::Vector2f x_tick_pos = sf::Vector2f(x_tick_step * i + axisX.axis[0].position.x, axisX.axis[0].position.y);
-                x_ticks.push_back(Tick(x_tick_pos, sf::Vector2f(2.f, 10.f), sf::Text()));
-
-                const float y_tick_step = (axisY.axis[1].position.y - axisY.axis[0].position.y) / 10;
-                sf::Vector2f y_tick_pos = sf::Vector2f(axisY.axis[0].position.x - 10.f, axisY.axis[0].position.y + y_tick_step * i);
-                y_ticks.push_back(Tick(y_tick_pos, sf::Vector2f(10.f, 2.f), sf::Text()));
-            }
         }
 
         void setSize(sf::Vector2f base_size)
@@ -356,10 +399,10 @@ class Figure : public sf::Drawable
                 target.draw(tick);
             }
 
-            for(auto& tick : y_ticks)
+            /*for(auto& tick : y_ticks)
             {
                 target.draw(tick);
-            }
+            }*/
         }
 };
 

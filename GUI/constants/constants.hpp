@@ -12,6 +12,10 @@ const sf::Color PRIMARY_ACCENT = sf::Color(255, 58, 32);
 const sf::Vector2f FIRST_BUTTON_POS = sf::Vector2f(50.f, 750.f);
 const sf::Vector2f SORT_BUTTON_SIZE = sf::Vector2f(180.f, 50.f);
 const sf::Vector2f PLOT_FIGURE_SIZE = sf::Vector2f(600.f, 600.f);
+const sf::Vector2f TICK_SIZE = sf::Vector2f(2.f, 10.f);
+
+const float TICK_STEPS[] = {0.5, 1, 5, 10, 100, 1000};
+const int N_TICK_STEPS = sizeof(TICK_STEPS);
 
 const float OFFSET = 50.f;
 const float LABEL_OFFSET = 15.f;
