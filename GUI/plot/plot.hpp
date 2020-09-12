@@ -12,16 +12,26 @@ class Tick : public sf::Drawable
         sf::RectangleShape tick;
         sf::Text label;
     public:
-        Tick(sf::Vector2f pos, sf::Vector2f size, sf::Text label) : label(label)
+        Tick(sf::Vector2f pos, sf::Vector2f size, float value)
         {
             tick.setPosition(pos);
             tick.setFillColor(sf::Color::Black);
             tick.setSize(size);
+
+
+            char buffer[TICK_BUFFER_SIZE] = "";
+            sprintf(buffer, "%.1f", value);
+
+            label = sf::Text(buffer, ROBOTO_MEDIUM);
+            label.setCharacterSize(15);
+            label.setPosition(sf::Vector2f(pos.x - 8.f, pos.y + 7.f));
+            label.setFillColor(sf::Color::Black);
         }
 
     void draw (sf::RenderTarget& target, sf::RenderStates states) const override
     {
         target.draw(tick);
+        target.draw(label);
     }
 };
 
@@ -130,8 +140,6 @@ class Plot : public Clickable
 
         virtual void onClick(sf::RenderWindow& window) override 
         {
-            sf::Font ROBOTO_MEDIUM;
-            ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
             sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
             sf::Text hint;
             hint.setFillColor(sf::Color::Black);
@@ -250,6 +258,7 @@ class Figure : public sf::Drawable
         {
 
             float step = 0;
+
             sf::Vector2f start_pos = axisX.axis[0].position;
 
             if(y_axis)
@@ -265,16 +274,16 @@ class Figure : public sf::Drawable
             const float tick_step = selectTickStep(max_value);
 
             for(float i = 0; i < max_value; i += tick_step)
-            {
+            {   
                 sf::Vector2f tick_pos = sf::Vector2f(i * step + start_pos.x, start_pos.y);
 
                 if(y_axis)
                 {
-                    y_ticks.push_back(Tick(tick_pos, TICK_SIZE, sf::Text()));
+                    y_ticks.push_back(Tick(tick_pos, TICK_SIZE, i));
                 }
                 else 
                 {
-                    x_ticks.push_back(Tick(tick_pos, TICK_SIZE, sf::Text()));
+                    x_ticks.push_back(Tick(tick_pos, TICK_SIZE, i));
                 }
             }
         }

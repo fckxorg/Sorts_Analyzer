@@ -12,7 +12,6 @@
 #include "GUI/controls/controls.hpp"
 #include "GUI/events/events.hpp"
 #include "GUI/plot/plot.hpp"
-sf::Font ROBOTO_MEDIUM;
 
 rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
 {
