@@ -27,6 +27,8 @@ class Plot : public Clickable
         sf::Vector2f start_point;
         float max_y_coord;
         float max_x_coord;
+        float x_step;
+        float y_step;
 
         float scale_value(const float value, const float step, const float offset)
         {
@@ -48,7 +50,7 @@ class Plot : public Clickable
             const int n_elements, 
             const float x_step, 
             const float y_step, 
-            sf::Color color) : start_point(start_point), n_elements(n_elements), max_x_coord(0), max_y_coord(0)
+            sf::Color color) : start_point(start_point), n_elements(n_elements), max_x_coord(0), max_y_coord(0), x_step(x_step), y_step(y_step)
         {
             assert(x_values != nullptr);
             assert(y_values != nullptr);
@@ -76,7 +78,8 @@ class Plot : public Clickable
                 printf("Iteration %d\n", i);
                 plot[i].position.x = scale_value(unscale_value(plot[i].position.x, old_x_step, start_point.x), new_x_step, start_point.x);
                 plot[i].position.y = scale_value(unscale_value(plot[i].position.y, old_y_step, start_point.y), new_y_step, start_point.y);
-
+                x_step = new_x_step;
+                y_step = new_y_step;
             }
         }
 
@@ -108,6 +111,19 @@ class Plot : public Clickable
 
         virtual void onClick(sf::RenderWindow& window) override 
         {
+            sf::Font ROBOTO_MEDIUM;
+            ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
+            sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
+            sf::Text hint;
+            hint.setFillColor(sf::Color::Black);
+            hint.setFont(ROBOTO_MEDIUM);
+            hint.setPosition(mouse_position.x, mouse_position.y);
+            hint.setCharacterSize(15);
+            hint.setString("(test_hint)");
+
+            window.draw(hint);
+            window.display();
+            std::this_thread::sleep_for(std::chrono::milliseconds(300));
         }
 
 };
