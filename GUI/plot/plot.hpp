@@ -111,6 +111,9 @@ class Plot : public Clickable
 
         virtual void onClick(sf::RenderWindow& window) override 
         {
+
+            char hint_buffer[10] = {};
+
             sf::Font ROBOTO_MEDIUM;
             ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
             sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
@@ -119,7 +122,10 @@ class Plot : public Clickable
             hint.setFont(ROBOTO_MEDIUM);
             hint.setPosition(mouse_position.x + 15.f, mouse_position.y);
             hint.setCharacterSize(15);
-            hint.setString("(test_hint)");
+
+            sprintf(hint_buffer, "(%d, %d)", mouse_position.x, mouse_position.y);
+
+            hint.setString(hint_buffer);
 
             window.draw(hint);
             window.display();
