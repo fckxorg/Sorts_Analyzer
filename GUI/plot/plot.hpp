@@ -12,27 +12,33 @@ class Tick : public sf::Drawable
         sf::RectangleShape tick;
         sf::Text label;
     public:
-        Tick(sf::Vector2f pos, sf::Vector2f size, float value)
+        Tick(sf::Vector2f pos, sf::Vector2f size, float value, bool rotate)
         {
             tick.setPosition(pos);
             tick.setFillColor(sf::Color::Black);
             tick.setSize(size);
-
 
             char buffer[TICK_BUFFER_SIZE] = "";
             sprintf(buffer, "%.1f", value);
 
             label = sf::Text(buffer, ROBOTO_MEDIUM);
             label.setCharacterSize(15);
-            label.setPosition(sf::Vector2f(pos.x - 8.f, pos.y + 7.f));
+            label.setPosition(sf::Vector2f(pos.x - 7.f, pos.y + 7.f));
             label.setFillColor(sf::Color::Black);
+
+            if(rotate)
+            {
+                tick.setRotation(90.f);
+                label.setRotation(-90.f);
+                label.setPosition(sf::Vector2f(pos.x - 28.f, pos.y + 7.f));
+            }
         }
 
-    void draw (sf::RenderTarget& target, sf::RenderStates states) const override
-    {
-        target.draw(tick);
-        target.draw(label);
-    }
+        void draw (sf::RenderTarget& target, sf::RenderStates states) const override
+        {
+            target.draw(tick);
+            target.draw(label);
+        }
 };
 
 int max_in_array(const int* array, const int n_elements)
@@ -105,7 +111,6 @@ class Plot : public Clickable
         {
             for(int i = 0; i < n_elements; ++i)
             {
-                printf("Iteration %d\n", i);
                 plot[i].position.x = scale_value(unscale_value(plot[i].position.x, old_x_step, start_point.x), new_x_step, start_point.x);
                 plot[i].position.y = scale_value(unscale_value(plot[i].position.y, old_y_step, start_point.y), new_y_step, start_point.y);
                 x_step = new_x_step;
@@ -224,10 +229,12 @@ class Figure : public sf::Drawable
             for(int i = 0; i < N_TICK_STEPS; ++i)
             {
                 float n_markers = max_value / TICK_STEPS[i];
-                if(n_markers > 5 && n_markers <= 10)
+                printf("N_markers %f\n", n_markers);
+                if(n_markers >= 5.f && n_markers <= 10.f)
                 {
                     return TICK_STEPS[i];
                 }
+                printf("%f not suitable step\n", TICK_STEPS[i]);
             }
 
             return TICK_STEPS[N_TICK_STEPS - 1];
@@ -271,19 +278,21 @@ class Figure : public sf::Drawable
                 x_ticks.clear();
                 step = x_step;
             }
+
             const float tick_step = selectTickStep(max_value);
+
 
             for(float i = 0; i < max_value; i += tick_step)
             {   
-                sf::Vector2f tick_pos = sf::Vector2f(i * step + start_pos.x, start_pos.y);
-
                 if(y_axis)
                 {
-                    y_ticks.push_back(Tick(tick_pos, TICK_SIZE, i));
+                    sf::Vector2f tick_pos = sf::Vector2f(start_pos.x, start_pos.y + i * step);
+                    y_ticks.push_back(Tick(tick_pos, TICK_SIZE, i, true));
                 }
                 else 
                 {
-                    x_ticks.push_back(Tick(tick_pos, TICK_SIZE, i));
+                    sf::Vector2f tick_pos = sf::Vector2f(i * step + start_pos.x, start_pos.y);
+                    x_ticks.push_back(Tick(tick_pos, TICK_SIZE, i, false));
                 }
             }
         }
@@ -408,10 +417,10 @@ class Figure : public sf::Drawable
                 target.draw(tick);
             }
 
-            /*for(auto& tick : y_ticks)
+            for(auto& tick : y_ticks)
             {
                 target.draw(tick);
-            }*/
+            }
         }
 };
 
