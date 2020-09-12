@@ -117,7 +117,7 @@ class Plot : public Clickable
             sf::Text hint;
             hint.setFillColor(sf::Color::Black);
             hint.setFont(ROBOTO_MEDIUM);
-            hint.setPosition(mouse_position.x, mouse_position.y);
+            hint.setPosition(mouse_position.x + 15.f, mouse_position.y);
             hint.setCharacterSize(15);
             hint.setString("(test_hint)");
 
