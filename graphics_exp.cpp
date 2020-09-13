@@ -88,9 +88,11 @@ int main()
     std::queue<Event*> event_queue;
     std::list<Clickable*> clickable_objects;
 
-    Figure plot = Figure(PLOT_FIGURE_SIZE, sf::Vector2f(50.f, 50.f),"bababa", "bebebe", ROBOTO_MEDIUM, PRIMARY_LIGHT);
-    plot.plotData(linear_x, linear_y, 5, sf::Color::Blue);
-    plot.plotData(x_vals, y_vals, 6, sf::Color::Red);
+    Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"bababa", "bebebe", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+    Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"bababa", "bebebe", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+
+    left_plot.plotData(linear_x, linear_y, 5, sf::Color::Blue);
+    right_plot.plotData(x_vals, y_vals, 6, sf::Color::Red);
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
@@ -104,8 +106,8 @@ int main()
         clickable_objects.push_back(button);
     }
 
-    clickable_objects.push_back(&plot.plots.front());
-    clickable_objects.push_back(&plot.plots.back());
+    clickable_objects.push_back(&left_plot.plots.front());
+    clickable_objects.push_back(&right_plot.plots.back());
 
 
     while (window.isOpen())
@@ -120,7 +122,8 @@ int main()
             window.draw(*object);
         }
         window.draw(rect);
-        window.draw(plot);
+        window.draw(left_plot);
+        window.draw(right_plot);
         window.display();
     }
     return 0;
