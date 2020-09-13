@@ -88,8 +88,8 @@ int main()
     std::queue<Event*> event_queue;
     std::list<Clickable*> clickable_objects;
 
-    Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"bababa", "bebebe", ROBOTO_MEDIUM, PRIMARY_LIGHT);
-    Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"bababa", "bebebe", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+    Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+    Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
 
     left_plot.plotData(linear_x, linear_y, 5, sf::Color::Blue);
     right_plot.plotData(x_vals, y_vals, 6, sf::Color::Red);
