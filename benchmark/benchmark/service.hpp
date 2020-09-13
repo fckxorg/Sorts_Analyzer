@@ -7,7 +7,7 @@
 #include <utility>
 
 #include "stat.hpp"
-#include "../sorts/sorts.h"
+#include "../sorts/sorts.hpp"
 
 void generateArray(Stat<int>* begin, Stat<int>* end, size_t mod = 10) 
 {

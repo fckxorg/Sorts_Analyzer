@@ -16,7 +16,7 @@ const sf::Vector2f SORT_BUTTON_SIZE = sf::Vector2f(180.f, 50.f);
 const sf::Vector2f PLOT_FIGURE_SIZE = sf::Vector2f(600.f, 600.f);
 const sf::Vector2f TICK_SIZE = sf::Vector2f(2.f, 10.f);
 
-const float TICK_STEPS[] = {0.5, 1, 5, 10, 100, 1000};
+const float TICK_STEPS[] = {0.5, 1, 5, 10, 100, 200, 500, 1000};
 const int N_TICK_STEPS = sizeof(TICK_STEPS);
 
 const float OFFSET = 50.f;

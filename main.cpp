@@ -13,6 +13,10 @@
 #include "GUI/events/events.hpp"
 #include "GUI/plot/plot.hpp"
 
+#include "benchmark/benchmark/stat.hpp"
+#include "benchmark/sorts/sorts.hpp"
+#include "benchmark/benchmark/service.hpp"
+
 rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
 {
         assert(string != nullptr);
@@ -77,12 +81,20 @@ void handleEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue)
 int main() 
 {
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
+    auto results = benchmarkSort(100, InsertionSort<Stat<int>>());
 
-    int x_vals[] = {0, 1, 2, 3, 4, 5};
-    int y_vals[] = {0, 1, 4, 9, 16, 25};
+    int* n_compares = new int[100]();
+    int* n_assignments = new int[100]();
+    int* x_vals = new int[100]();
 
-    int linear_x[5] = {0, 1, 2, 3, 4};
-    int linear_y[5] = {0, 1, 2, 3, 4};
+    for(int i = 0; i < 100; ++i)
+    {
+        x_vals[i] = i;
+        n_compares[i] = results[i].first;
+        n_assignments[i] = results[i].second;
+        printf("%d %d\n", results[i].first, results[i].second);
+    }
+    
 
     bool IS_ANY_CLICKABLE_UNDER_CURSOR = false;
     std::queue<Event*> event_queue;
@@ -91,8 +103,8 @@ int main()
     Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
     Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
 
-    left_plot.plotData(linear_x, linear_y, 5, sf::Color::Blue);
-    right_plot.plotData(x_vals, y_vals, 6, sf::Color::Red);
+    left_plot.plotData(x_vals, n_compares, 100, sf::Color::Blue);
+    right_plot.plotData(x_vals, n_assignments, 100, sf::Color::Red);
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
@@ -126,5 +138,9 @@ int main()
         window.draw(right_plot);
         window.display();
     }
+
+    delete[] n_compares;
+    delete[] n_assignments;
+    delete[] x_vals;
     return 0;
 }

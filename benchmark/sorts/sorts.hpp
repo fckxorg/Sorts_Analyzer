@@ -1,3 +1,6 @@
+#ifndef SORTS_HPP
+#define SORTS_HPP
+
 #include <assert.h>
 
 template <typename T>
@@ -29,3 +32,5 @@ class InsertionSort : public AbstractSort<T>
             }  
         }
 };
+
+#endif
