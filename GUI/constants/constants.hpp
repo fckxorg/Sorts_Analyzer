@@ -18,7 +18,7 @@ const float TICK_STEPS[] = {0.5, 1, 5, 10, 100, 1000};
 const int N_TICK_STEPS = sizeof(TICK_STEPS);
 
 const float OFFSET = 50.f;
-const float LABEL_OFFSET = 15.f;
+const float LABEL_OFFSET = 25.f;
 const float EPSILON = 10.f;
 
 const unsigned int BUTTON_TEXT_SIZE = 24;
