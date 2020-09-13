@@ -1,52 +1,130 @@
-#include <iostream>
-#include <random>
-#include <utility>
+#include <SFML/Graphics.hpp>
+#include <cstdio>
+#include <chrono>
+#include <thread>
+#include <functional>
+#include <list>
+#include <queue>
+#include <cassert>
+#include <cmath>
 
-#include "sorts.h"
-#include "stat.h"
+#include "GUI/constants/constants.hpp"
+#include "GUI/controls/controls.hpp"
+#include "GUI/events/events.hpp"
+#include "GUI/plot/plot.hpp"
 
-void generateArray(Stat<int>* begin, Stat<int>* end, size_t mod = 10) 
+rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
 {
-    assert(begin != nullptr);
-    assert(end != nullptr);
+        assert(string != nullptr);
 
-    for(Stat<int>* current = begin; current != end; ++current)
+        rectButton* button = new rectButton();
+
+        button->setColor(PRIMARY_DARK);
+        button->setSize(SORT_BUTTON_SIZE);
+        button->setPosition(pos);
+        button->setTextFont(ROBOTO_MEDIUM);
+        button->setTextColor(PRIMARY_LIGHT);
+        button->setTextSize(BUTTON_TEXT_SIZE);
+        button->setTextString(string);
+
+        return button;
+}
+
+void generateEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue, std::list<Clickable*> clickable_objects, bool& IS_ANY_CLICKABLE_UNDER_CURSOR)
+{
+    for(auto object : clickable_objects) 
     {
-        *current = rand() % mod;
+        if(object->isUnderCursor(window))
+        {
+            IS_ANY_CLICKABLE_UNDER_CURSOR = true;
+            HoveredClickable* event = new HoveredClickable();
+            event_queue.push(event);
+
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                Clicked* event = new Clicked(object);
+                event_queue.push(event);
+            }
+            break;
+        }
+    }
+
+    if(!IS_ANY_CLICKABLE_UNDER_CURSOR)
+    {
+        NoHoveredClickable* event = new NoHoveredClickable();
+        event_queue.push(event);
+    } 
+}
+
+void handleEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue)
+{
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            window.close();
+    }
+
+    while(!event_queue.empty())
+    {
+        Event* event = event_queue.front();
+        event->handle(window);
+        event_queue.pop();
+        delete event;
     }
 }
 
-std::pair<int, int>* benchmarkSort(size_t n_samples, AbstractSort<Stat<int>>&& sort)
+int main() 
 {
-    auto results = new std::pair<int, int>[n_samples]();
+    ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
 
-    for(size_t current_size = 1; current_size < n_samples; ++current_size) 
+    int x_vals[] = {0, 1, 2, 3, 4, 5};
+    int y_vals[] = {0, 1, 4, 9, 16, 25};
+
+    int linear_x[5] = {0, 1, 2, 3, 4};
+    int linear_y[5] = {0, 1, 2, 3, 4};
+
+    bool IS_ANY_CLICKABLE_UNDER_CURSOR = false;
+    std::queue<Event*> event_queue;
+    std::list<Clickable*> clickable_objects;
+
+    Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+    Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+
+    left_plot.plotData(linear_x, linear_y, 5, sf::Color::Blue);
+    right_plot.plotData(x_vals, y_vals, 6, sf::Color::Red);
+
+    sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
+    sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
+    rect.setFillColor(SECONDARY_DARK);
+
+    char button_names[5][20] = {"MergeSort", "QuickSort", "SelectionSort", "InsertionSort", "BubbleSort"};
+    for(int i = 0; i < 5; ++i) 
     {
-        Stat<int>::n_comparisons = 0;
-        Stat<int>::n_assignments = 0;
-
-        Stat<int>* array = new Stat<int>[current_size]();
-        generateArray(array, array + current_size);
-        sort(array, array + current_size);
-        results[current_size] = {Stat<int>::n_comparisons, Stat<int>::n_assignments};
-
-        delete[] array;
+        sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
+        rectButton* button = createSortStyledButton(pos, button_names[i]);
+        clickable_objects.push_back(button);
     }
 
-    return results;
-}
+    clickable_objects.push_back(&left_plot.plots.front());
+    clickable_objects.push_back(&right_plot.plots.back());
 
-int main(int argc, char** argv)
-{
-    const size_t N_SAMPLES = 100;
-    
-    auto results = benchmarkSort(N_SAMPLES, InsertionSort<Stat<int>>());
 
-    printf("|  Array size | Comparisons | Assignments |\n");
-    for(size_t i = 0; i < N_SAMPLES; ++i) 
+    while (window.isOpen())
     {
-        printf("| %11.1d | %11.1d | %11.1d |\n", i, results[i].first, results[i].second);
-    }
+        IS_ANY_CLICKABLE_UNDER_CURSOR = false;
+        generateEvents(window, event_queue, clickable_objects, IS_ANY_CLICKABLE_UNDER_CURSOR);
+        handleEvents(window, event_queue);
 
-    delete[] results;
+        window.clear(PRIMARY_LIGHT); 
+        for(auto& object : clickable_objects)
+        {
+            window.draw(*object);
+        }
+        window.draw(rect);
+        window.draw(left_plot);
+        window.draw(right_plot);
+        window.display();
+    }
+    return 0;
 }

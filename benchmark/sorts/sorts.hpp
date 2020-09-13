@@ -4,14 +4,14 @@ template <typename T>
 class AbstractSort
 {
     public:
-        virtual void operator()(T* begin, T* end) = 0;
+        virtual void operator()(T* begin, T* end) const = 0;
 };
 
 template <typename T>
 class InsertionSort : public AbstractSort<T>
 {
     public:
-        void operator()(T* begin, T* end) override
+        void operator()(T* begin, T* end) const override
         {
             assert(begin != nullptr);
             assert(end != nullptr);

@@ -1,3 +1,6 @@
+#ifndef STAT_HPP
+#define STAT_HPP
+
 template <typename T>
 class Stat 
 {
@@ -67,3 +70,4 @@ bool operator==(const Stat<T>& first, const Stat<T>& second)
     return first.value == second.value;
 }
 
+#endif

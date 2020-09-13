@@ -26,6 +26,8 @@ const float EPSILON = 10.f;
 const unsigned int BUTTON_TEXT_SIZE = 24;
 const unsigned int BUTTON_PUSH_ANIMATION_DURATION = 150;
 const unsigned int TICK_BUFFER_SIZE = 10;
+const unsigned int N_SAMPLES = 100;
+
 
 sf::Font ROBOTO_MEDIUM;
 
