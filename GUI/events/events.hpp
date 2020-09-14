@@ -15,6 +15,7 @@ class Event
 };
 
 std::queue<Event*> event_queue;
+std::list<Clickable*> clickable_objects;
 
 class NoHoveredClickable : public Event
 {
@@ -61,5 +62,25 @@ class Clicked : public Event
             object->onClick(window);
         }
 };
+
+void handleEvents(sf::RenderWindow& window)
+{
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            window.close();
+    }
+
+    while(!event_queue.empty())
+    {
+        Event* event = event_queue.front();
+        event->handle(window);
+        event_queue.pop();
+        delete event;
+    }
+}
+
+
 
 #endif

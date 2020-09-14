@@ -19,7 +19,6 @@
 
 Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
 Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
-std::list<Clickable*> clickable_objects;
 
 rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
 {
@@ -38,7 +37,7 @@ rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
         return button;
 }
 
-void generateEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue, std::list<Clickable*> clickable_objects, bool& IS_ANY_CLICKABLE_UNDER_CURSOR)
+void generateEvents(sf::RenderWindow& window, std::list<Clickable*> clickable_objects, bool& IS_ANY_CLICKABLE_UNDER_CURSOR)
 {
     for(auto object : clickable_objects) 
     {
@@ -63,26 +62,6 @@ void generateEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue, s
         event_queue.push(event);
     } 
 }
-
-void handleEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue)
-{
-    sf::Event event;
-    while (window.pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            window.close();
-    }
-
-    while(!event_queue.empty())
-    {
-        Event* event = event_queue.front();
-        event->handle(window);
-        event_queue.pop();
-        delete event;
-    }
-}
-
-
 
 
 class InsertionSortBenchmarkTrigger : public ButtonTrigger
@@ -124,12 +103,10 @@ int main()
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
 
     bool IS_ANY_CLICKABLE_UNDER_CURSOR = false;
-    std::queue<Event*> event_queue;
 
     auto results = benchmarkSort(100, InsertionSort<Stat<int>>());
 
     InsertionSortBenchmarkTrigger trigger;
-    //trigger();
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
@@ -149,8 +126,8 @@ int main()
     while (window.isOpen())
     {
         IS_ANY_CLICKABLE_UNDER_CURSOR = false;
-        generateEvents(window, event_queue, clickable_objects, IS_ANY_CLICKABLE_UNDER_CURSOR);
-        handleEvents(window, event_queue);
+        generateEvents(window, clickable_objects, IS_ANY_CLICKABLE_UNDER_CURSOR);
+        handleEvents(window);
 
         window.clear(PRIMARY_LIGHT); 
         for(auto& object : clickable_objects)
