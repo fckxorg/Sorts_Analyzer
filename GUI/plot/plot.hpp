@@ -371,6 +371,12 @@ class Figure : public sf::Drawable
             plots.push_back(Plot(axisX.axis[0].position, x_values, y_values, n_values, x_step, y_step, color));
         }
 
+        void clear()
+        {
+            plots.clear();
+            // TODO deletion from 
+        }
+
         void setSize(sf::Vector2f base_size)
         {
             base.setSize(base_size);

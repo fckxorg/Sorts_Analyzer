@@ -6,12 +6,15 @@
 
 #include "../controls/controls.hpp"
 
+
 class Event
 {
     public:
         virtual ~Event(){};
         virtual void handle(sf::RenderWindow& window) = 0;
 };
+
+std::queue<Event*> event_queue;
 
 class NoHoveredClickable : public Event
 {
