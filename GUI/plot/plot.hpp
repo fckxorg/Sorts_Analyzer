@@ -12,25 +12,28 @@ class Tick : public sf::Drawable
         sf::RectangleShape tick;
         sf::Text label;
     public:
+        Tick() = delete;
+        ~Tick() = default;
+
         Tick(sf::Vector2f pos, sf::Vector2f size, float value, bool rotate)
         {
             tick.setPosition(pos);
             tick.setFillColor(sf::Color::Black);
             tick.setSize(size);
 
-            char buffer[TICK_BUFFER_SIZE] = "";
+            char buffer[TICK_LABEL_BUFFER_SIZE] = "";
             sprintf(buffer, "%.1f", value);
 
             label = sf::Text(buffer, ROBOTO_MEDIUM);
-            label.setCharacterSize(15);
-            label.setPosition(sf::Vector2f(pos.x - 7.f, pos.y + 7.f));
+            label.setCharacterSize(TICK_TEXT_SIZE);
+            label.setPosition(sf::Vector2f(pos.x + TICK_LABEL_OFFSET_X, pos.y + TICK_LABEL_OFFSET_Y));
             label.setFillColor(sf::Color::Black);
 
             if(rotate)
             {
-                tick.setRotation(90.f);
-                label.setRotation(-90.f);
-                label.setPosition(sf::Vector2f(pos.x - 28.f, pos.y + 7.f));
+                tick.setRotation(Y_AXIS_TICK_ROTATION);
+                label.setRotation(Y_AXIS_TICK_LABEL_ROTATION);
+                label.setPosition(sf::Vector2f(pos.x + Y_AXIS_TICK_LABEL_OFFSET_X, pos.y + Y_AXIS_TICK_LABEL_OFFSET_Y));
             }
         }
 
@@ -64,7 +67,7 @@ class Plot : public Clickable
         float max_x_coord;
         float x_step;
         float y_step;
-        char hint_buffer[10];
+        char hint_buffer[HINT_BUFFER_SIZE];
 
         float scale_value(const float value, const float step, const float offset)
         {
@@ -93,7 +96,6 @@ class Plot : public Clickable
 
             plot = sf::VertexArray(sf::LineStrip, n_elements);
 
-            printf("Plot vertices: \n");
             for(int i = 0; i < n_elements; ++i) {
                 float curr_x_val = scale_value(x_values[i], x_step, start_point.x);
                 float curr_y_val = scale_value(y_values[i], y_step, start_point.y);
@@ -101,7 +103,6 @@ class Plot : public Clickable
                 max_x_coord = max_x_coord < curr_x_val ? curr_x_val : max_x_coord;
                 max_y_coord = max_y_coord < curr_y_val ? curr_y_val : max_y_coord;
 
-                printf("(%.2f, %.2f)\n", curr_x_val, curr_y_val);
                 plot[i].position = sf::Vector2f(curr_x_val, curr_y_val);
                 plot[i].color = color;
             }   
