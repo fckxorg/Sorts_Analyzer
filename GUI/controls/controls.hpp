@@ -22,16 +22,6 @@ class ButtonTrigger
         virtual ~ButtonTrigger(){};
 };
 
-class EmptyTrigger : public ButtonTrigger
-{
-    public:
-        void operator()() override {}
-        ~EmptyTrigger() = default;
-};
-
-EmptyTrigger EMPTY_TRIGGER;
-
-
 class rectButton : public Clickable
 {
         sf::RectangleShape base;
@@ -45,10 +35,11 @@ class rectButton : public Clickable
             base.setSize(base_size);
         }
 
-        rectButton() : trigger(&EMPTY_TRIGGER)
+        rectButton()
         {
             base = sf::RectangleShape();
             text = sf::Text();
+            trigger = nullptr;
         }
 
         ~rectButton() = default;
@@ -131,6 +122,8 @@ class rectButton : public Clickable
         void onClick(sf::RenderWindow& window) override
         {
             animatePush(window);
+            
+            assert(trigger != nullptr);
             (*trigger)();
         }
 
