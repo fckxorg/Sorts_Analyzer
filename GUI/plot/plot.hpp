@@ -5,6 +5,7 @@
 #include <list>
 
 #include "../controls/controls.hpp"
+#include "../constants/constants.hpp"
 
 class Tick : public sf::Drawable
 {

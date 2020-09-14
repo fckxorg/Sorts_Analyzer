@@ -7,6 +7,8 @@
 #include <functional>
 #include <cassert>
 
+#include "../constants/constants.hpp"
+
 class Clickable : public sf::Drawable
 {
     public:

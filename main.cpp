@@ -8,10 +8,10 @@
 #include <cassert>
 #include <cmath>
 
-#include "GUI/constants/constants.hpp"
 #include "GUI/controls/controls.hpp"
 #include "GUI/events/events.hpp"
 #include "GUI/plot/plot.hpp"
+#include "GUI/constants/constants.hpp"
 
 #include "benchmark/benchmark/stat.hpp"
 #include "benchmark/sorts/sorts.hpp"
@@ -47,22 +47,21 @@ class SortBenchmarkTrigger : public ButtonTrigger
         void operator()() override
         {
             printf("Trigger invoked\n");
-            auto results = benchmarkSort(100, Sort());
+            auto results = benchmarkSort(N_SAMPLES, Sort());
 
-            int* n_compares = new int[100]();
-            int* n_assignments = new int[100]();
-            int* x_vals = new int[100]();
+            int* n_compares = new int[N_SAMPLES]();
+            int* n_assignments = new int[N_SAMPLES]();
+            int* x_vals = new int[N_SAMPLES]();
 
-            for(int i = 0; i < 100; ++i)
+            for(int i = 0; i < N_SAMPLES; ++i)
             {
                 x_vals[i] = i;
                 n_compares[i] = results[i].first;
                 n_assignments[i] = results[i].second;
-                printf("%d %d\n", results[i].first, results[i].second);
             }
 
-            left_plot.plotData(x_vals, n_compares, 100, sf::Color::Blue);
-            right_plot.plotData(x_vals, n_assignments, 100, sf::Color::Blue);
+            left_plot.plotData(x_vals, n_compares, N_SAMPLES, sf::Color::Blue);
+            right_plot.plotData(x_vals, n_assignments, N_SAMPLES, sf::Color::Blue);
 
             clickable_objects.push_back(&left_plot.plots.back());
             clickable_objects.push_back(&right_plot.plots.front());
@@ -70,10 +69,8 @@ class SortBenchmarkTrigger : public ButtonTrigger
             delete[] n_compares;
             delete[] n_assignments;
             delete[] x_vals;
-
         }
 };
-
 
 int main() 
 {
@@ -96,17 +93,20 @@ int main()
     {
         IS_ANY_CLICKABLE_UNDER_CURSOR = false;
         generateEvents(window);
-        handleEvents(window);
-
-        window.clear(PRIMARY_LIGHT); 
-        for(auto& object : clickable_objects)
+        if(!event_queue.empty())
         {
-            window.draw(*object);
+            handleEvents(window);
+
+            window.clear(PRIMARY_LIGHT); 
+            for(auto& object : clickable_objects)
+            {
+                window.draw(*object);
+            }
+            window.draw(rect);
+            window.draw(left_plot);
+            window.draw(right_plot);
+            window.display();
         }
-        window.draw(rect);
-        window.draw(left_plot);
-        window.draw(right_plot);
-        window.display();
     }
     return 0;
 }
