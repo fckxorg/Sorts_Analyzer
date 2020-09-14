@@ -406,7 +406,6 @@ class Figure : public sf::Drawable
             target.draw(base);
             target.draw(axisX);
             target.draw(axisY);
-
             for(auto& plot : plots)
             {
                 target.draw(plot);
@@ -421,6 +420,7 @@ class Figure : public sf::Drawable
             {
                 target.draw(tick);
             }
+            
         }
 };
 

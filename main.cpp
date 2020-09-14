@@ -17,6 +17,10 @@
 #include "benchmark/sorts/sorts.hpp"
 #include "benchmark/benchmark/service.hpp"
 
+Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+std::list<Clickable*> clickable_objects;
+
 rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
 {
         assert(string != nullptr);
@@ -78,49 +82,69 @@ void handleEvents(sf::RenderWindow& window, std::queue<Event*>& event_queue)
     }
 }
 
+
+
+
+class InsertionSortBenchmarkTrigger : public ButtonTrigger
+{
+    public:
+        void operator()() override
+        {
+            printf("Trigger invoked\n");
+            auto results = benchmarkSort(100, InsertionSort<Stat<int>>());
+
+            int* n_compares = new int[100]();
+            int* n_assignments = new int[100]();
+            int* x_vals = new int[100]();
+
+            for(int i = 0; i < 100; ++i)
+            {
+                x_vals[i] = i;
+                n_compares[i] = results[i].first;
+                n_assignments[i] = results[i].second;
+                printf("%d %d\n", results[i].first, results[i].second);
+            }
+
+            left_plot.plotData(x_vals, n_compares, 100, sf::Color::Blue);
+            right_plot.plotData(x_vals, n_assignments, 100, sf::Color::Blue);
+
+            clickable_objects.push_back(&left_plot.plots.back());
+            clickable_objects.push_back(&right_plot.plots.front());
+
+            delete[] n_compares;
+            delete[] n_assignments;
+            delete[] x_vals;
+
+        }
+};
+
+
 int main() 
 {
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
-    auto results = benchmarkSort(100, InsertionSort<Stat<int>>());
-
-    int* n_compares = new int[100]();
-    int* n_assignments = new int[100]();
-    int* x_vals = new int[100]();
-
-    for(int i = 0; i < 100; ++i)
-    {
-        x_vals[i] = i;
-        n_compares[i] = results[i].first;
-        n_assignments[i] = results[i].second;
-        printf("%d %d\n", results[i].first, results[i].second);
-    }
-    
 
     bool IS_ANY_CLICKABLE_UNDER_CURSOR = false;
     std::queue<Event*> event_queue;
-    std::list<Clickable*> clickable_objects;
 
-    Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
-    Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+    auto results = benchmarkSort(100, InsertionSort<Stat<int>>());
 
-    left_plot.plotData(x_vals, n_compares, 100, sf::Color::Blue);
-    right_plot.plotData(x_vals, n_assignments, 100, sf::Color::Red);
+    InsertionSortBenchmarkTrigger trigger;
+    //trigger();
 
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
     sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
     rect.setFillColor(SECONDARY_DARK);
+
+
 
     char button_names[5][20] = {"MergeSort", "QuickSort", "SelectionSort", "InsertionSort", "BubbleSort"};
     for(int i = 0; i < 5; ++i) 
     {
         sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
         rectButton* button = createSortStyledButton(pos, button_names[i]);
+        button->setTrigger(&trigger);
         clickable_objects.push_back(button);
     }
-
-    clickable_objects.push_back(&left_plot.plots.front());
-    clickable_objects.push_back(&right_plot.plots.back());
-
 
     while (window.isOpen())
     {
@@ -138,9 +162,5 @@ int main()
         window.draw(right_plot);
         window.display();
     }
-
-    delete[] n_compares;
-    delete[] n_assignments;
-    delete[] x_vals;
     return 0;
 }

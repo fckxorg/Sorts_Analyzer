@@ -15,13 +15,28 @@ class Clickable : public sf::Drawable
         virtual ~Clickable(){};
 };
 
+class ButtonTrigger
+{
+    public:
+        virtual void operator()() = 0;
+        virtual ~ButtonTrigger(){};
+};
+
+class EmptyTrigger : public ButtonTrigger
+{
+    public:
+        void operator()() override {}
+        ~EmptyTrigger() = default;
+};
+
+EmptyTrigger EMPTY_TRIGGER;
 
 
 class rectButton : public Clickable
 {
         sf::RectangleShape base;
         sf::Text text;
-        std::function<void()> trigger;
+        ButtonTrigger* trigger;
 
     public:
         
@@ -30,11 +45,10 @@ class rectButton : public Clickable
             base.setSize(base_size);
         }
 
-        rectButton()
+        rectButton() : trigger(&EMPTY_TRIGGER)
         {
             base = sf::RectangleShape();
             text = sf::Text();
-            trigger = std::function<void()>();
         }
 
         ~rectButton() = default;
@@ -55,7 +69,7 @@ class rectButton : public Clickable
             text.setPosition(sf::Vector2f(pos.x + 4, pos.y + 10));
         }
 
-        void setTrigger(std::function<void()> trigger)
+        void setTrigger(ButtonTrigger* trigger)
         {
             this->trigger = trigger;
         }
@@ -117,7 +131,7 @@ class rectButton : public Clickable
         void onClick(sf::RenderWindow& window) override
         {
             animatePush(window);
-            trigger();
+            (*trigger)();
         }
 
         void animatePush(sf::RenderWindow& window)

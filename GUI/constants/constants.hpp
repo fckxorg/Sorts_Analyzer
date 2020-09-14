@@ -31,4 +31,5 @@ const unsigned int N_SAMPLES = 100;
 
 sf::Font ROBOTO_MEDIUM;
 
+
 #endif
