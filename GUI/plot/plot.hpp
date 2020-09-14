@@ -204,7 +204,7 @@ class Axis : public sf::Drawable
             label.setPosition(pos);
             if(axis[0].position.x == axis[1].position.x)
             {
-                label.rotate(-90.f);
+                label.rotate(Y_AXIS_LABEL_ROTATION);
             }
         }
 
@@ -230,7 +230,7 @@ class Figure : public sf::Drawable
             {
                 float n_markers = max_value / TICK_STEPS[i];
                 printf("N_markers %f\n", n_markers);
-                if(n_markers >= 5.f && n_markers <= 10.f)
+                if(n_markers >= N_MARKERS_LOWER_BOUNDARY && n_markers <= N_MARKERS_UPPER_BOUNDARY)
                 {
                     return TICK_STEPS[i];
                 }

@@ -22,8 +22,14 @@ const float Y_AXIS_TICK_LABEL_ROTATION = -90.f;
 const float Y_AXIS_TICK_LABEL_OFFSET_X = -28.f;
 const float Y_AXIS_TICK_LABEL_OFFSET_Y = 7.f;
 
+const float N_MARKERS_LOWER_BOUNDARY = 5.f;
+const float N_MARKERS_UPPER_BOUNDARY = 10.f;
+
 // ---------------------- Plot Hint Settings --------------------
 const unsigned int HINT_BUFFER_SIZE = 10;
+
+// ----------------------- AXIS SETTINGS ------------------------
+const float Y_AXIS_LABEL_ROTATION = -90.f;
 
 const sf::Vector2f FIRST_BUTTON_POS = sf::Vector2f(50.f, 750.f);
 const sf::Vector2f LEFT_PLOT_POS = sf::Vector2f(133.f, 50.f);
