@@ -20,9 +20,10 @@
 Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
 Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
 
-rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
+rectButton* createSortButton(const sf::Vector2f& pos, const char* string, ButtonTrigger* trigger)
 {
         assert(string != nullptr);
+        assert(trigger != nullptr);
 
         rectButton* button = new rectButton();
 
@@ -33,18 +34,20 @@ rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
         button->setTextColor(PRIMARY_LIGHT);
         button->setTextSize(BUTTON_TEXT_SIZE);
         button->setTextString(string);
+        button->setTrigger(trigger);
 
         return button;
 }
 
 
-class InsertionSortBenchmarkTrigger : public ButtonTrigger
-{
+template <typename Sort>
+class SortBenchmarkTrigger : public ButtonTrigger
+{ 
     public:
         void operator()() override
         {
             printf("Trigger invoked\n");
-            auto results = benchmarkSort(100, InsertionSort<Stat<int>>());
+            auto results = benchmarkSort(100, Sort());
 
             int* n_compares = new int[100]();
             int* n_assignments = new int[100]();
@@ -76,22 +79,16 @@ int main()
 {
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
 
-    auto results = benchmarkSort(100, InsertionSort<Stat<int>>());
+    SortBenchmarkTrigger<InsertionSort<Stat<int>>> trigger;
 
-    InsertionSortBenchmarkTrigger trigger;
-
-    sf::RenderWindow window(sf::VideoMode(1600, 900), "Sorts analyzer");
-    sf::RectangleShape rect(sf::Vector2f(1600.f, 700.f)); //leave it here for graphics background
+    sf::RenderWindow window(WINDOW_SIZE, "Sorts analyzer");
+    sf::RectangleShape rect(PLOT_BACKGROUND_SIZE); //leave it here for graphics background
     rect.setFillColor(SECONDARY_DARK);
 
-
-
-    char button_names[5][20] = {"MergeSort", "QuickSort", "SelectionSort", "InsertionSort", "BubbleSort"};
-    for(int i = 0; i < 5; ++i) 
+    for(int i = 0; i < N_SORT_BUTTONS; ++i) 
     {
         sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
-        rectButton* button = createSortStyledButton(pos, button_names[i]);
-        button->setTrigger(&trigger);
+        rectButton* button = createSortButton(pos, button_names[i], &trigger);
         clickable_objects.push_back(button);
     }
 

@@ -31,6 +31,10 @@ const unsigned int HINT_BUFFER_SIZE = 10;
 // ----------------------- AXIS SETTINGS ------------------------
 const float Y_AXIS_LABEL_ROTATION = -90.f;
 
+// ----------------------- BUTTONS SETTINGS ---------------------
+char button_names[][20] = {"MergeSort", "QuickSort", "SelectionSort", "InsertionSort", "BubbleSort"};
+const unsigned int N_SORT_BUTTONS = 5;
+
 const sf::Vector2f FIRST_BUTTON_POS = sf::Vector2f(50.f, 750.f);
 const sf::Vector2f LEFT_PLOT_POS = sf::Vector2f(133.f, 50.f);
 const sf::Vector2f RIGHT_PLOT_POS = sf::Vector2f(866.f, 50.f);
@@ -49,5 +53,7 @@ const unsigned int N_SAMPLES = 100;
 
 sf::Font ROBOTO_MEDIUM;
 
+const sf::VideoMode WINDOW_SIZE = sf::VideoMode(1600, 900);
+const sf::Vector2f PLOT_BACKGROUND_SIZE = sf::Vector2f(1600.f, 700.f);
 
 #endif
