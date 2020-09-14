@@ -61,7 +61,6 @@ class Plot : public Clickable
 {
     private:
         sf::VertexArray plot;
-        int n_elements;
         sf::Vector2f start_point;
         float max_y_coord;
         float max_x_coord;
@@ -89,7 +88,7 @@ class Plot : public Clickable
             const int n_elements, 
             const float x_step, 
             const float y_step, 
-            sf::Color color) : start_point(start_point), n_elements(n_elements), max_x_coord(0), max_y_coord(0), x_step(x_step), y_step(y_step)
+            sf::Color color) : start_point(start_point), max_x_coord(0), max_y_coord(0), x_step(x_step), y_step(y_step)
         {
             assert(x_values != nullptr);
             assert(y_values != nullptr);
@@ -110,7 +109,7 @@ class Plot : public Clickable
 
         void rescale(const float new_x_step, const float new_y_step, const float old_x_step, const float old_y_step)
         {
-            for(int i = 0; i < n_elements; ++i)
+            for(int i = 0; i < plot.getVertexCount(); ++i)
             {
                 plot[i].position.x = scale_value(unscale_value(plot[i].position.x, old_x_step, start_point.x), new_x_step, start_point.x);
                 plot[i].position.y = scale_value(unscale_value(plot[i].position.y, old_y_step, start_point.y), new_y_step, start_point.y);
@@ -126,7 +125,7 @@ class Plot : public Clickable
 
         bool isUnderCursor(sf::RenderWindow& window) const override 
         {
-            for(int i = 1; i < n_elements; ++i)
+            for(int i = 1; i < plot.getVertexCount(); ++i)
             {
                 sf::Vector2f first_vertex = plot[i].position;
                 sf::Vector2f second_vertex = plot[i - 1].position;
