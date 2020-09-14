@@ -16,6 +16,7 @@ class Event
 
 std::queue<Event*> event_queue;
 std::list<Clickable*> clickable_objects;
+bool IS_ANY_CLICKABLE_UNDER_CURSOR = false;
 
 class NoHoveredClickable : public Event
 {
@@ -81,6 +82,31 @@ void handleEvents(sf::RenderWindow& window)
     }
 }
 
+void generateEvents(sf::RenderWindow& window)
+{
+    for(auto object : clickable_objects) 
+    {
+        if(object->isUnderCursor(window))
+        {
+            IS_ANY_CLICKABLE_UNDER_CURSOR = true;
+            HoveredClickable* event = new HoveredClickable();
+            event_queue.push(event);
+
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                Clicked* event = new Clicked(object);
+                event_queue.push(event);
+            }
+            break;
+        }
+    }
+
+    if(!IS_ANY_CLICKABLE_UNDER_CURSOR)
+    {
+        NoHoveredClickable* event = new NoHoveredClickable();
+        event_queue.push(event);
+    } 
+}
 
 
 #endif

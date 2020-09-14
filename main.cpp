@@ -37,32 +37,6 @@ rectButton* createSortStyledButton(const sf::Vector2f& pos, const char* string)
         return button;
 }
 
-void generateEvents(sf::RenderWindow& window, std::list<Clickable*> clickable_objects, bool& IS_ANY_CLICKABLE_UNDER_CURSOR)
-{
-    for(auto object : clickable_objects) 
-    {
-        if(object->isUnderCursor(window))
-        {
-            IS_ANY_CLICKABLE_UNDER_CURSOR = true;
-            HoveredClickable* event = new HoveredClickable();
-            event_queue.push(event);
-
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-            {
-                Clicked* event = new Clicked(object);
-                event_queue.push(event);
-            }
-            break;
-        }
-    }
-
-    if(!IS_ANY_CLICKABLE_UNDER_CURSOR)
-    {
-        NoHoveredClickable* event = new NoHoveredClickable();
-        event_queue.push(event);
-    } 
-}
-
 
 class InsertionSortBenchmarkTrigger : public ButtonTrigger
 {
@@ -102,8 +76,6 @@ int main()
 {
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
 
-    bool IS_ANY_CLICKABLE_UNDER_CURSOR = false;
-
     auto results = benchmarkSort(100, InsertionSort<Stat<int>>());
 
     InsertionSortBenchmarkTrigger trigger;
@@ -126,7 +98,7 @@ int main()
     while (window.isOpen())
     {
         IS_ANY_CLICKABLE_UNDER_CURSOR = false;
-        generateEvents(window, clickable_objects, IS_ANY_CLICKABLE_UNDER_CURSOR);
+        generateEvents(window);
         handleEvents(window);
 
         window.clear(PRIMARY_LIGHT); 
