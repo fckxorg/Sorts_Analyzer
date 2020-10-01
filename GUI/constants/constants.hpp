@@ -14,7 +14,7 @@ extern const sf::Color     PRIMARY_ACCENT;
 extern const float         TICK_STEPS[];                   
 extern const int           N_TICK_STEPS;                  
 extern const unsigned int  TICK_TEXT_SIZE;                 
-static const unsigned int  TICK_LABEL_BUFFER_SIZE = 10;         
+static constexpr unsigned int  TICK_LABEL_BUFFER_SIZE = 10;
 extern const float         TICK_LABEL_OFFSET_X;           
 extern const float         TICK_LABEL_OFFSET_Y;           
 extern const float         Y_AXIS_TICK_ROTATION;          
@@ -26,7 +26,7 @@ extern const float         N_MARKERS_LOWER_BOUNDARY;
 extern const float         N_MARKERS_UPPER_BOUNDARY;        
  
 // ---------------------- Plot Hint Settings --------------------
-static const unsigned int  HINT_BUFFER_SIZE = 10;               
+static constexpr unsigned int  HINT_BUFFER_SIZE = 10;               
  
 // ----------------------- AXIS SETTINGS ------------------------
 extern const float         Y_AXIS_LABEL_ROTATION;         

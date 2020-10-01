@@ -11,6 +11,7 @@ const sf::Color     PRIMARY_ACCENT                  = sf::Color(255,  58,  32);
 const float         TICK_STEPS[]                    = {0.5, 1, 5, 10, 100, 200, 500, 1000};
 const int           N_TICK_STEPS                    = sizeof(TICK_STEPS);
 const unsigned int  TICK_TEXT_SIZE                  = 15;
+//                  TICK_LABEL_BUFFER_SIZE          = 10; defined in constants.hpp
 const float         TICK_LABEL_OFFSET_X             = -7.f;
 const float         TICK_LABEL_OFFSET_Y             = 7.f;
 const float         Y_AXIS_TICK_ROTATION            = 90.f;
@@ -22,7 +23,7 @@ const float         N_MARKERS_LOWER_BOUNDARY        = 5.f;
 const float         N_MARKERS_UPPER_BOUNDARY        = 10.f;
 
 // ---------------------- Plot Hint Settings --------------------
-//const unsigned int  HINT_BUFFER_SIZE                = 10;
+//                  HINT_BUFFER_SIZE                = 10 defined in constants.hpp
 
 // ----------------------- AXIS SETTINGS ------------------------
 const float         Y_AXIS_LABEL_ROTATION           = -90.f;
