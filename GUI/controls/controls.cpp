@@ -1,6 +1,7 @@
-/*Clickable::~Clickable(){};
+/*
+Clickable::~Clickable(){};
 
-ButtonTrigger:: ~ButtonTrigger(){};
+ButtonTrigger::~ButtonTrigger(){};
 
 class rectButton : public Clickable
 {

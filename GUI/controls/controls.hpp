@@ -9,6 +9,9 @@
 
 #include "../constants/constants.hpp"
 
+//Грис и Хантер (формальные языки)
+
+
 class Clickable : public sf::Drawable
 {
     public:
@@ -20,7 +23,7 @@ class Clickable : public sf::Drawable
 class ButtonTrigger
 {
     public:
-        virtual void operator()() = 0;
+        virtual void operator()() = 0; 
         virtual ~ButtonTrigger(){};
 };
 
