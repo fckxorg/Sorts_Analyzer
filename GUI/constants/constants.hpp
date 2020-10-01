@@ -4,56 +4,56 @@
 #include <SFML/Graphics.hpp>
 
 // ---------------- Coloring ----------------------
-const sf::Color PRIMARY_DARK = sf::Color(37, 61, 91);
-const sf::Color PRIMARY_LIGHT = sf::Color(239, 247, 246);
-const sf::Color SECONDARY_LIGHT = sf::Color(58, 51, 53); 
-const sf::Color SECONDARY_DARK = sf::Color(108, 142, 173); 
-const sf::Color PRIMARY_ACCENT = sf::Color(255, 58, 32);
-
+extern const sf::Color     PRIMARY_DARK;                    
+extern const sf::Color     PRIMARY_LIGHT;                   
+extern const sf::Color     SECONDARY_LIGHT;                 
+extern const sf::Color     SECONDARY_DARK;                
+extern const sf::Color     PRIMARY_ACCENT;                 
+ 
 // ---------------------- TICK SETTINGS --------------------
-const float TICK_STEPS[] = {0.5, 1, 5, 10, 100, 200, 500, 1000};
-const int N_TICK_STEPS = sizeof(TICK_STEPS);
-const unsigned int TICK_TEXT_SIZE = 15;
-const unsigned int TICK_LABEL_BUFFER_SIZE = 10;
-const float TICK_LABEL_OFFSET_X = -7.f;
-const float TICK_LABEL_OFFSET_Y = 7.f;
-const float Y_AXIS_TICK_ROTATION = 90.f;
-const float Y_AXIS_TICK_LABEL_ROTATION = -90.f;
-const float Y_AXIS_TICK_LABEL_OFFSET_X = -28.f;
-const float Y_AXIS_TICK_LABEL_OFFSET_Y = 7.f;
-
-const float N_MARKERS_LOWER_BOUNDARY = 5.f;
-const float N_MARKERS_UPPER_BOUNDARY = 10.f;
-
+extern const float         TICK_STEPS[];                   
+extern const int           N_TICK_STEPS;                  
+extern const unsigned int  TICK_TEXT_SIZE;                 
+static const unsigned int  TICK_LABEL_BUFFER_SIZE = 10;         
+extern const float         TICK_LABEL_OFFSET_X;           
+extern const float         TICK_LABEL_OFFSET_Y;           
+extern const float         Y_AXIS_TICK_ROTATION;          
+extern const float         Y_AXIS_TICK_LABEL_ROTATION;     
+extern const float         Y_AXIS_TICK_LABEL_OFFSET_X;     
+extern const float         Y_AXIS_TICK_LABEL_OFFSET_Y;     
+ 
+extern const float         N_MARKERS_LOWER_BOUNDARY;        
+extern const float         N_MARKERS_UPPER_BOUNDARY;        
+ 
 // ---------------------- Plot Hint Settings --------------------
-const unsigned int HINT_BUFFER_SIZE = 10;
-
+static const unsigned int  HINT_BUFFER_SIZE = 10;               
+ 
 // ----------------------- AXIS SETTINGS ------------------------
-const float Y_AXIS_LABEL_ROTATION = -90.f;
+extern const float         Y_AXIS_LABEL_ROTATION;         
 
 // ----------------------- BUTTONS SETTINGS ---------------------
-char button_names[][20] = {"MergeSort", "QuickSort", "SelectionSort", "InsertionSort", "BubbleSort"};
-const unsigned int N_SORT_BUTTONS = 5;
+extern char                button_names[][20];           
+                                                       
+                                                       
+                                                       
+                                                       
+extern const unsigned int  N_SORT_BUTTONS;                  
+extern const sf::Vector2f  FIRST_BUTTON_POS;                
+extern const sf::Vector2f  LEFT_PLOT_POS;                   
+extern const sf::Vector2f  RIGHT_PLOT_POS;                  
+extern const sf::Vector2f  SORT_BUTTON_SIZE;                
+extern const sf::Vector2f  PLOT_FIGURE_SIZE;                
+extern const sf::Vector2f  TICK_SIZE;                       
+extern const float         OFFSET;                          
+extern const float         LABEL_OFFSET;                   
+extern const float         EPSILON;                         
+extern const unsigned int  BUTTON_TEXT_SIZE;                
+extern const unsigned int  BUTTON_PUSH_ANIMATION_DURATION;  
+extern const unsigned int  N_SAMPLES;                       
 
-const sf::Vector2f FIRST_BUTTON_POS = sf::Vector2f(50.f, 750.f);
-const sf::Vector2f LEFT_PLOT_POS = sf::Vector2f(133.f, 50.f);
-const sf::Vector2f RIGHT_PLOT_POS = sf::Vector2f(866.f, 50.f);
-const sf::Vector2f SORT_BUTTON_SIZE = sf::Vector2f(180.f, 50.f);
-const sf::Vector2f PLOT_FIGURE_SIZE = sf::Vector2f(600.f, 600.f);
-const sf::Vector2f TICK_SIZE = sf::Vector2f(2.f, 10.f);
-
-const float OFFSET = 50.f;
-const float LABEL_OFFSET = 25.f;
-const float EPSILON = 10.f;
-
-const unsigned int BUTTON_TEXT_SIZE = 24;
-const unsigned int BUTTON_PUSH_ANIMATION_DURATION = 150;
-const unsigned int N_SAMPLES = 100;
-
-
-sf::Font ROBOTO_MEDIUM;
-
-const sf::VideoMode WINDOW_SIZE = sf::VideoMode(1600, 900);
-const sf::Vector2f PLOT_BACKGROUND_SIZE = sf::Vector2f(1600.f, 700.f);
+//---------------------------- MISC -----------------------------------------
+extern sf::Font            ROBOTO_MEDIUM;
+extern const sf::VideoMode WINDOW_SIZE;                     
+extern const sf::Vector2f  PLOT_BACKGROUND_SIZE;            
 
 #endif

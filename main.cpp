@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <cstdio>
 #include <chrono>
 #include <thread>
@@ -8,17 +10,18 @@
 #include <cassert>
 #include <cmath>
 
+#include "GUI/constants/constants.hpp"
 #include "GUI/controls/controls.hpp"
 #include "GUI/events/events.hpp"
 #include "GUI/plot/plot.hpp"
-#include "GUI/constants/constants.hpp"
 
 #include "benchmark/benchmark/stat.hpp"
 #include "benchmark/sorts/sorts.hpp"
 #include "benchmark/benchmark/service.hpp"
 
-Figure left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
-Figure right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+Figure left_plot; 
+Figure right_plot;
+
 
 rectButton* createSortButton(const sf::Vector2f& pos, const char* string, ButtonTrigger* trigger)
 {
@@ -74,6 +77,9 @@ class SortBenchmarkTrigger : public ButtonTrigger
 
 int main() 
 {
+    left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+    right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
+
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
 
     SortBenchmarkTrigger<InsertionSort<Stat<int>>> trigger;
