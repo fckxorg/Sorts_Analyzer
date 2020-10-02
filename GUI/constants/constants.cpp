@@ -1,4 +1,5 @@
 #include "constants.hpp"
+#include <SFML/Graphics/Color.hpp>
 
 // ---------------- Coloring ----------------------
 const sf::Color     PRIMARY_DARK                    = sf::Color( 37,  61,  91);
@@ -34,6 +35,11 @@ char                button_names[][20]              = {"MergeSort",
                                                        "SelectionSort", 
                                                        "InsertionSort", 
                                                        "BubbleSort"};
+sf::Color  button_colors[]                          = {sf::Color::Red, 
+                                                       sf::Color::Blue, 
+                                                       sf::Color::Green,
+                                                       sf::Color::Cyan,
+                                                       sf::Color::Magenta};
 const unsigned int  N_SORT_BUTTONS                  = 5;
 
 const sf::Vector2f  FIRST_BUTTON_POS                = sf::Vector2f(50.f, 750.f);

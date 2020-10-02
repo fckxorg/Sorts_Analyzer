@@ -33,6 +33,7 @@ extern const float         Y_AXIS_LABEL_ROTATION;
 
 // ----------------------- BUTTONS SETTINGS ---------------------
 extern char                button_names[][20];           
+extern sf::Color           button_colors[];
 extern const unsigned int  N_SORT_BUTTONS;                  
 extern const sf::Vector2f  FIRST_BUTTON_POS;                
 extern const sf::Vector2f  LEFT_PLOT_POS;                   

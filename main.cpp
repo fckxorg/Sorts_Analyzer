@@ -24,7 +24,7 @@ Figure left_plot;
 Figure right_plot;
 
 
-SortButton* createSortButton(const sf::Vector2f& pos, const char* string, ButtonTrigger* trigger)
+SortButton* createSortButton(const sf::Vector2f& pos, const char* string, const sf::Color indicator_color, ButtonTrigger* trigger)
 {
         assert(string != nullptr);
         assert(trigger != nullptr);
@@ -39,7 +39,7 @@ SortButton* createSortButton(const sf::Vector2f& pos, const char* string, Button
         button->setTextString(string);
         button->setTrigger(trigger);
         
-        button->setIndicatorColor(sf::Color::Yellow);
+        button->setIndicatorColor(indicator_color);
         button->setIndicatorSize(sf::Vector2f(20.f, 20.f));
 
         button->setPosition(pos);
@@ -96,7 +96,7 @@ int main()
     for(int i = 0; i < N_SORT_BUTTONS; ++i) 
     {
         sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
-        SortButton* button = createSortButton(pos, button_names[i], &trigger);
+        SortButton* button = createSortButton(pos, button_names[i], button_colors[i], &trigger);
         clickable_objects.push_back(button);
     }
 
