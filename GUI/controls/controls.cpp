@@ -1,7 +1,6 @@
 #include "controls.hpp"
 
 
-ButtonTrigger::~ButtonTrigger(){}
 
         
 void rectButton::setSize(sf::Vector2f base_size)

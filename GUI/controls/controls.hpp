@@ -10,13 +10,7 @@
 
 #include "../clickable/clickable.hpp"
 #include "../constants/constants.hpp"
-
-class ButtonTrigger
-{
-    public:
-        virtual void operator()() = 0; 
-        virtual ~ButtonTrigger();
-};
+#include "../button_trigger/button_trigger.hpp"
 
 class rectButton : public Clickable
 {
