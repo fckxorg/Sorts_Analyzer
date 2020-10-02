@@ -33,10 +33,6 @@ extern const float         Y_AXIS_LABEL_ROTATION;
 
 // ----------------------- BUTTONS SETTINGS ---------------------
 extern char                button_names[][20];           
-                                                       
-                                                       
-                                                       
-                                                       
 extern const unsigned int  N_SORT_BUTTONS;                  
 extern const sf::Vector2f  FIRST_BUTTON_POS;                
 extern const sf::Vector2f  LEFT_PLOT_POS;                   
@@ -50,6 +46,7 @@ extern const float         EPSILON;
 extern const unsigned int  BUTTON_TEXT_SIZE;                
 extern const unsigned int  BUTTON_PUSH_ANIMATION_DURATION;  
 extern const unsigned int  N_SAMPLES;                       
+extern const unsigned int  COLOR_INDICATOR_OFFSET;
 
 //---------------------------- MISC -----------------------------------------
 extern sf::Font            ROBOTO_MEDIUM;

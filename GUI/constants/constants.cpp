@@ -50,6 +50,7 @@ const float         EPSILON                         = 10.f;
 const unsigned int  BUTTON_TEXT_SIZE                = 24;
 const unsigned int  BUTTON_PUSH_ANIMATION_DURATION  = 150;
 const unsigned int  N_SAMPLES                       = 100;
+const unsigned int  COLOR_INDICATOR_OFFSET          = 5.f;
 
 
 sf::Font            ROBOTO_MEDIUM;
