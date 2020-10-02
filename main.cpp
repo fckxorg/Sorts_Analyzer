@@ -88,10 +88,17 @@ class SortBenchmarkTrigger : public ButtonTrigger
 
 class ClearTrigger : public ButtonTrigger
 {
+    private:
+        Figure* left_plot;
+        Figure* right_plot;
+
     public:
+        ClearTrigger(Figure* left_plot, Figure* right_plot) : left_plot(left_plot), right_plot(right_plot){}
+
         void operator()() override
         {
-        
+            left_plot->clear();
+            right_plot->clear();
         }
 };
 
@@ -115,6 +122,18 @@ int main()
         clickable_objects.push_back(button);
     }
 
+    sf::Vector2f clear_button_pos = sf::Vector2f(FIRST_BUTTON_POS.x + N_SORT_BUTTONS * SORT_BUTTON_SIZE.x + N_SORT_BUTTONS * OFFSET, FIRST_BUTTON_POS.y);
+    auto trigger = new ClearTrigger(&left_plot, &right_plot);
+    rectButton* clear_button = new rectButton();
+    clear_button->setColor(PRIMARY_DARK);
+    clear_button->setPosition(clear_button_pos);
+    clear_button->setSize(SORT_BUTTON_SIZE);
+    clear_button->setTextFont(ROBOTO_MEDIUM);
+    clear_button->setTextColor(PRIMARY_LIGHT);
+    clear_button->setTextSize(BUTTON_TEXT_SIZE);
+    clear_button->setTextString(button_names[N_SORT_BUTTONS]);
+    clear_button->setTrigger(trigger);
+    clickable_objects.push_back(clear_button);
 
 
     while (window.isOpen())

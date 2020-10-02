@@ -318,7 +318,9 @@ void Figure::plotData(const int* x_values, const int* y_values, const int n_valu
         rescale_Y(new_plot_y_max_value);
         rescale_ticks(y_max_value, true);
     }
-    plots.push_back(new Plot(axisX.axis[0].position, x_values, y_values, n_values, x_step, y_step, color));
+    Plot* new_plot = new Plot(axisX.axis[0].position, x_values, y_values, n_values, x_step, y_step, color);
+    plots.push_back(new_plot);
+    clickable_objects.push_back(new_plot);
 }
 
 void Figure::clear()
