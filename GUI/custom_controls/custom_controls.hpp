@@ -11,6 +11,10 @@ class SortButton : public rectButton
 {
         sf::RectangleShape color_indicator;
     public:
+        
+        SortButton(const sf::Vector2f& pos, const char* string, const sf::Color indicator_color, ButtonTrigger* trigger);
+
+
         void setIndicatorSize(const sf::Vector2f& indicator_size);
         
         void setIndicatorColor(const sf::Color& indicator_color);
@@ -20,6 +24,7 @@ class SortButton : public rectButton
         void setPosition(const sf::Vector2f& pos);
 
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+        
         
 };
 

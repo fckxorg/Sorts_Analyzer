@@ -36,4 +36,26 @@ void SortButton::draw(sf::RenderTarget &target, sf::RenderStates states) const
     rectButton::draw(target, states);
     target.draw(color_indicator);
 }
+SortButton::SortButton(const sf::Vector2f& pos, const char* string, const sf::Color indicator_color, ButtonTrigger* trigger)
+        {
+            assert(string != nullptr);
+            assert(trigger != nullptr);
+
+
+            this->setColor(PRIMARY_DARK);
+            this->setSize(SORT_BUTTON_SIZE);
+            this->setTextFont(ROBOTO_MEDIUM);
+            this->setTextColor(PRIMARY_LIGHT);
+            this->setTextSize(BUTTON_TEXT_SIZE);
+            this->setTextString(string);
+            this->setTrigger(trigger);
+            
+            this->setIndicatorColor(indicator_color);
+            this->setIndicatorSize(sf::Vector2f(20.f, 20.f));
+
+            this->setPosition(pos);
+
+        }
+
+
 

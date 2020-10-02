@@ -24,30 +24,6 @@ Figure left_plot;
 Figure right_plot;
 
 
-SortButton* createSortButton(const sf::Vector2f& pos, const char* string, const sf::Color indicator_color, ButtonTrigger* trigger)
-{
-        assert(string != nullptr);
-        assert(trigger != nullptr);
-
-        SortButton* button = new SortButton();
-
-        button->setColor(PRIMARY_DARK);
-        button->setSize(SORT_BUTTON_SIZE);
-        button->setTextFont(ROBOTO_MEDIUM);
-        button->setTextColor(PRIMARY_LIGHT);
-        button->setTextSize(BUTTON_TEXT_SIZE);
-        button->setTextString(string);
-        button->setTrigger(trigger);
-        
-        button->setIndicatorColor(indicator_color);
-        button->setIndicatorSize(sf::Vector2f(20.f, 20.f));
-
-        button->setPosition(pos);
-
-        return button;
-}
-
-
 template <typename Sort>
 class SortBenchmarkTrigger : public ButtonTrigger
 { 
@@ -119,7 +95,7 @@ int main()
     {
         sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
         auto trigger = new SortBenchmarkTrigger<InsertionSort<Stat<int>>>(button_colors[i]);
-        SortButton* button = createSortButton(pos, button_names[i], button_colors[i], trigger);
+        SortButton* button = new SortButton(pos, button_names[i], button_colors[i], trigger);
         clickable_objects.push_back(button);
     }
 
