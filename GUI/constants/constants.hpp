@@ -54,4 +54,5 @@ extern sf::Font            ROBOTO_MEDIUM;
 extern const sf::VideoMode WINDOW_SIZE;                     
 extern const sf::Vector2f  PLOT_BACKGROUND_SIZE;            
 
+
 #endif
