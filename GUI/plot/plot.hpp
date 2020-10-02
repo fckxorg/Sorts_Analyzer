@@ -7,6 +7,7 @@
 
 #include "../constants/constants.hpp"
 #include "../controls/controls.hpp"
+#include "../events/events.hpp"
 
 class Tick : public sf::Drawable
 {
@@ -100,7 +101,7 @@ class Figure : public sf::Drawable
         sf::RectangleShape base;
         Axis axisX;
         Axis axisY;
-        std::list<Plot> plots;
+        std::list<Plot*> plots;
         std::list<Tick> x_ticks;
         std::list<Tick> y_ticks;
         int y_max_value;

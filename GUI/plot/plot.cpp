@@ -207,7 +207,7 @@ void Figure::rescale_X(const int new_x_max_value)
     float new_x_step = (axisX.axis[1].position.x - axisX.axis[0].position.x) / static_cast<float>(x_max_value);
     for(auto& plot : plots) 
     {
-        plot.rescale(new_x_step, y_step, x_step, y_step);
+        plot->rescale(new_x_step, y_step, x_step, y_step);
     }
 
     x_step = new_x_step;
@@ -218,7 +218,7 @@ void Figure::rescale_Y(const int new_y_max_value)
     float new_y_step = (axisY.axis[1].position.y - axisY.axis[0].position.y) / static_cast<float>(y_max_value);
     for(auto& plot : plots) 
     {
-        plot.rescale(x_step, new_y_step, x_step, y_step);
+        plot->rescale(x_step, new_y_step, x_step, y_step);
     }
     y_step = new_y_step;
 }
@@ -318,13 +318,20 @@ void Figure::plotData(const int* x_values, const int* y_values, const int n_valu
         rescale_Y(new_plot_y_max_value);
         rescale_ticks(y_max_value, true);
     }
-    plots.push_back(Plot(axisX.axis[0].position, x_values, y_values, n_values, x_step, y_step, color));
+    plots.push_back(new Plot(axisX.axis[0].position, x_values, y_values, n_values, x_step, y_step, color));
 }
 
 void Figure::clear()
 {
+    for(auto plot: plots)
+    {
+        auto it = std::find(clickable_objects.begin(), clickable_objects.end(), plot);
+        
+        assert(it != clickable_objects.end());
+
+        clickable_objects.erase(it);
+    }
     plots.clear();
-    // TODO deletion from clickables 
 }
 
 void Figure::setSize(sf::Vector2f base_size)
@@ -364,7 +371,7 @@ void Figure::draw (sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(axisY);
     for(auto& plot : plots)
     {
-        target.draw(plot);
+        target.draw(*plot);
     }
 
     for(auto& tick : x_ticks)

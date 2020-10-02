@@ -77,8 +77,8 @@ class SortBenchmarkTrigger : public ButtonTrigger
             left_plot.plotData(x_vals, n_compares, N_SAMPLES, color);
             right_plot.plotData(x_vals, n_assignments, N_SAMPLES, color);
 
-            clickable_objects.push_back(&left_plot.plots.back());
-            clickable_objects.push_back(&right_plot.plots.front());
+            clickable_objects.push_back(left_plot.plots.back());
+            clickable_objects.push_back(right_plot.plots.front());
 
             delete[] n_compares;
             delete[] n_assignments;
@@ -88,10 +88,11 @@ class SortBenchmarkTrigger : public ButtonTrigger
 
 class ClearTrigger : public ButtonTrigger
 {
-    void operator()() override
-    {
+    public:
+        void operator()() override
+        {
         
-    }
+        }
 };
 
 
