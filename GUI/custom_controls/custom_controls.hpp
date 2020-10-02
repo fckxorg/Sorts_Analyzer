@@ -12,7 +12,7 @@ class SortButton : public rectButton
         sf::RectangleShape color_indicator;
     public:
         
-        SortButton(const sf::Vector2f& pos, const char* string, const sf::Color indicator_color, ButtonTrigger* trigger);
+        SortButton(const sf::Vector2f& pos, const char* string, ButtonTrigger* trigger, const sf::Color indicator_color);
 
 
         void setIndicatorSize(const sf::Vector2f& indicator_size);

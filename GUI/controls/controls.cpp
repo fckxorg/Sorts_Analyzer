@@ -17,6 +17,22 @@ rectButton::rectButton()
     trigger = nullptr;
 }
 
+rectButton::rectButton(const sf::Vector2f& pos, const char* string, ButtonTrigger* trigger)
+{
+    assert(string != nullptr);
+    assert(trigger != nullptr);
+
+
+    this->setColor(PRIMARY_DARK);
+    this->setSize(SORT_BUTTON_SIZE);
+    this->setTextFont(ROBOTO_MEDIUM);
+    this->setTextColor(PRIMARY_LIGHT);
+    this->setTextSize(BUTTON_TEXT_SIZE);
+    this->setTextString(string);
+    this->setTrigger(trigger);
+    this->setPosition(pos);
+
+}
 rectButton::~rectButton()
 {
     delete trigger;

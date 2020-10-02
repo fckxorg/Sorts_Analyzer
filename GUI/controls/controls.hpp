@@ -36,6 +36,7 @@ class rectButton : public Clickable
 
         rectButton();
         
+        rectButton(const sf::Vector2f& pos, const char* string, ButtonTrigger* trigger);
         virtual ~rectButton();
 
         void setColor(const sf::Color& base_color);

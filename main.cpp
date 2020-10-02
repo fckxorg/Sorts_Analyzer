@@ -95,23 +95,15 @@ int main()
     {
         sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
         auto trigger = new SortBenchmarkTrigger<InsertionSort<Stat<int>>>(button_colors[i]);
-        SortButton* button = new SortButton(pos, button_names[i], button_colors[i], trigger);
+        SortButton* button = new SortButton(pos, button_names[i], trigger, button_colors[i]);
         clickable_objects.push_back(button);
     }
 
     sf::Vector2f clear_button_pos = sf::Vector2f(FIRST_BUTTON_POS.x + N_SORT_BUTTONS * SORT_BUTTON_SIZE.x + N_SORT_BUTTONS * OFFSET, FIRST_BUTTON_POS.y);
     auto trigger = new ClearTrigger(&left_plot, &right_plot);
-    rectButton* clear_button = new rectButton();
-    clear_button->setColor(PRIMARY_DARK);
-    clear_button->setPosition(clear_button_pos);
-    clear_button->setSize(SORT_BUTTON_SIZE);
-    clear_button->setTextFont(ROBOTO_MEDIUM);
-    clear_button->setTextColor(PRIMARY_LIGHT);
-    clear_button->setTextSize(BUTTON_TEXT_SIZE);
-    clear_button->setTextString(button_names[N_SORT_BUTTONS]);
-    clear_button->setTrigger(trigger);
-    clickable_objects.push_back(clear_button);
+    rectButton* clear_button = new rectButton(clear_button_pos, button_names[N_SORT_BUTTONS], trigger);
 
+    clickable_objects.push_back(clear_button);
 
     while (window.isOpen())
     {
