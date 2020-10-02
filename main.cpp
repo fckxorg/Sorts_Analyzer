@@ -51,7 +51,13 @@ SortButton* createSortButton(const sf::Vector2f& pos, const char* string, const 
 template <typename Sort>
 class SortBenchmarkTrigger : public ButtonTrigger
 { 
+    private:
+        sf::Color color;
     public:
+        explicit SortBenchmarkTrigger<Sort>(const sf::Color& color)
+        {
+            this->color = color;
+        }
         void operator()() override
         {
             printf("Trigger invoked\n");
@@ -68,8 +74,8 @@ class SortBenchmarkTrigger : public ButtonTrigger
                 n_assignments[i] = results[i].second;
             }
 
-            left_plot.plotData(x_vals, n_compares, N_SAMPLES, sf::Color::Blue);
-            right_plot.plotData(x_vals, n_assignments, N_SAMPLES, sf::Color::Blue);
+            left_plot.plotData(x_vals, n_compares, N_SAMPLES, color);
+            right_plot.plotData(x_vals, n_assignments, N_SAMPLES, color);
 
             clickable_objects.push_back(&left_plot.plots.back());
             clickable_objects.push_back(&right_plot.plots.front());
@@ -80,14 +86,14 @@ class SortBenchmarkTrigger : public ButtonTrigger
         }
 };
 
+
+
 int main() 
 {
     left_plot = Figure(PLOT_FIGURE_SIZE, LEFT_PLOT_POS,"array length", "n_compares", ROBOTO_MEDIUM, PRIMARY_LIGHT);
     right_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
 
     ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
-
-    SortBenchmarkTrigger<InsertionSort<Stat<int>>> trigger;
 
     sf::RenderWindow window(WINDOW_SIZE, "Sorts analyzer");
     sf::RectangleShape rect(PLOT_BACKGROUND_SIZE); //leave it here for graphics background
@@ -96,7 +102,8 @@ int main()
     for(int i = 0; i < N_SORT_BUTTONS; ++i) 
     {
         sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
-        SortButton* button = createSortButton(pos, button_names[i], button_colors[i], &trigger);
+        auto trigger = new SortBenchmarkTrigger<InsertionSort<Stat<int>>>(button_colors[i]);
+        SortButton* button = createSortButton(pos, button_names[i], button_colors[i], trigger);
         clickable_objects.push_back(button);
     }
 
