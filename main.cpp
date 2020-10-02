@@ -12,6 +12,7 @@
 
 #include "GUI/constants/constants.hpp"
 #include "GUI/controls/controls.hpp"
+#include "GUI/custom_controls/custom_controls.hpp"
 #include "GUI/events/events.hpp"
 #include "GUI/plot/plot.hpp"
 
@@ -23,21 +24,25 @@ Figure left_plot;
 Figure right_plot;
 
 
-rectButton* createSortButton(const sf::Vector2f& pos, const char* string, ButtonTrigger* trigger)
+SortButton* createSortButton(const sf::Vector2f& pos, const char* string, ButtonTrigger* trigger)
 {
         assert(string != nullptr);
         assert(trigger != nullptr);
 
-        rectButton* button = new rectButton();
+        SortButton* button = new SortButton();
 
         button->setColor(PRIMARY_DARK);
         button->setSize(SORT_BUTTON_SIZE);
-        button->setPosition(pos);
         button->setTextFont(ROBOTO_MEDIUM);
         button->setTextColor(PRIMARY_LIGHT);
         button->setTextSize(BUTTON_TEXT_SIZE);
         button->setTextString(string);
         button->setTrigger(trigger);
+        
+        button->setIndicatorColor(sf::Color::Yellow);
+        button->setIndicatorSize(sf::Vector2f(20.f, 20.f));
+
+        button->setPosition(pos);
 
         return button;
 }
@@ -91,7 +96,7 @@ int main()
     for(int i = 0; i < N_SORT_BUTTONS; ++i) 
     {
         sf::Vector2f pos = sf::Vector2f(FIRST_BUTTON_POS.x + i * SORT_BUTTON_SIZE.x + i * OFFSET, FIRST_BUTTON_POS.y);
-        rectButton* button = createSortButton(pos, button_names[i], &trigger);
+        SortButton* button = createSortButton(pos, button_names[i], &trigger);
         clickable_objects.push_back(button);
     }
 
