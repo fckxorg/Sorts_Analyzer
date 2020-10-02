@@ -17,6 +17,11 @@ rectButton::rectButton()
     trigger = nullptr;
 }
 
+rectButton::~rectButton()
+{
+    delete trigger;
+}
+
 
 void rectButton::setColor(const sf::Color& base_color)
 {

@@ -36,7 +36,7 @@ class rectButton : public Clickable
 
         rectButton();
         
-        ~rectButton() = default;
+        virtual ~rectButton();
 
         void setColor(const sf::Color& base_color);
 

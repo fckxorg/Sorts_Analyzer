@@ -61,7 +61,7 @@ class SortBenchmarkTrigger : public ButtonTrigger
         void operator()() override
         {
             printf("Trigger invoked\n");
-            auto results = benchmarkSort(N_SAMPLES, Sort());
+            std::pair<int, int>* results = benchmarkSort(N_SAMPLES, Sort());
 
             int* n_compares = new int[N_SAMPLES]();
             int* n_assignments = new int[N_SAMPLES]();
@@ -83,6 +83,7 @@ class SortBenchmarkTrigger : public ButtonTrigger
             delete[] n_compares;
             delete[] n_assignments;
             delete[] x_vals;
+            delete[] results;
         }
 };
 
@@ -155,5 +156,20 @@ int main()
             window.display();
         }
     }
+
+    // cleaning up
+    for(auto& object : clickable_objects)
+    {
+        delete object;
+    }
+
+    while(!event_queue.empty())
+    {
+        Event* event = event_queue.front();
+        delete event;
+        event_queue.pop();
+    }
+
+    
     return 0;
 }
