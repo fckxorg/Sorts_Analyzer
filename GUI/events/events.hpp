@@ -8,13 +8,17 @@
 
 #include "../controls/controls.hpp"
 
-
 class Event
 {
     public:
         virtual ~Event();
         virtual void handle(sf::RenderWindow& window) = 0;
 };
+
+extern std::queue<Event*> event_queue;
+extern std::list<Clickable*> clickable_objects;
+extern bool IS_ANY_CLICKABLE_UNDER_CURSOR;
+
 
 extern std::queue<Event*> event_queue;
 extern std::list<Clickable*> clickable_objects;

@@ -86,6 +86,13 @@ class SortBenchmarkTrigger : public ButtonTrigger
         }
 };
 
+class ClearTrigger : public ButtonTrigger
+{
+    void operator()() override
+    {
+        
+    }
+};
 
 
 int main() 
@@ -106,6 +113,8 @@ int main()
         SortButton* button = createSortButton(pos, button_names[i], button_colors[i], trigger);
         clickable_objects.push_back(button);
     }
+
+
 
     while (window.isOpen())
     {

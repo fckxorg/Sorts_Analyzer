@@ -34,7 +34,8 @@ char                button_names[][20]              = {"MergeSort",
                                                        "QuickSort", 
                                                        "SelectionSort", 
                                                        "InsertionSort", 
-                                                       "BubbleSort"};
+                                                       "BubbleSort",
+                                                       "Clear"};
 sf::Color  button_colors[]                          = {sf::Color::Red, 
                                                        sf::Color::Blue, 
                                                        sf::Color::Green,
