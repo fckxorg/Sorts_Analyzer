@@ -2,21 +2,14 @@
 #ifndef CONTROLS_HPP
 #define CONTROLS_HPP
 
-#include "../constants/constants.hpp"
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
 #include <functional>
 #include <cassert>
 
-
-class Clickable : public sf::Drawable
-{
-    public:
-        virtual bool isUnderCursor(sf::RenderWindow& window) const = 0;
-        virtual void onClick(sf::RenderWindow& window) = 0;
-        virtual ~Clickable();
-};
+#include "../clickable/clickable.hpp"
+#include "../constants/constants.hpp"
 
 class ButtonTrigger
 {

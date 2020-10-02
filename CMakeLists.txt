@@ -10,6 +10,7 @@ add_subdirectory(GUI/controls)
 add_subdirectory(GUI/custom_controls)
 add_subdirectory(GUI/events)
 add_subdirectory(GUI/plot)
+add_subdirectory(GUI/clickable)
 add_subdirectory(benchmark/benchmark)
 add_subdirectory(benchmark/sorts)
 
@@ -23,7 +24,8 @@ target_include_directories(Main
                           PUBLIC "${PROJECT_SOURCE_DIR}/GUI/plot"
                           PUBLIC "${PROJECT_SOURCE_DIR}/benchmark/sorts"
                           PUBLIC "${PROJECT_SOURCE_DIR}/benchmark/benchmark"
-                          PUBLIC "${PROJECT_SOURCE_DIR}/GUI/custom_controls")
+                          PUBLIC "${PROJECT_SOURCE_DIR}/GUI/custom_controls"
+                          PUBLIC "${PROJECT_SOURCE_DIR}/GUI/clickable")
 
 
 #look for SFML and add it
@@ -32,4 +34,4 @@ find_package (SFML REQUIRED system window graphics network audio)
 
 
 #we add the executable of the program
-target_link_libraries(Main PUBLIC sfml-system sfml-window sfml-graphics sfml-network sfml-audio Benchmark Sorts Controls CustomControls Constants Events Plot)
+target_link_libraries(Main PUBLIC sfml-system sfml-window sfml-graphics sfml-network sfml-audio Benchmark Sorts Controls CustomControls Constants Events Plot Clickable)

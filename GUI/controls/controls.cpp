@@ -1,6 +1,5 @@
 #include "controls.hpp"
 
-Clickable::~Clickable(){}
 
 ButtonTrigger::~ButtonTrigger(){}
 

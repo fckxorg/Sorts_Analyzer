@@ -7,6 +7,7 @@
 #include <list>
 
 #include "../controls/controls.hpp"
+#include "../clickable/clickable.hpp"
 
 class Event
 {

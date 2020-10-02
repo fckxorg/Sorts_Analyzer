@@ -8,6 +8,7 @@
 #include "../constants/constants.hpp"
 #include "../controls/controls.hpp"
 #include "../events/events.hpp"
+#include "../clickable/clickable.hpp"
 
 class Tick : public sf::Drawable
 {
