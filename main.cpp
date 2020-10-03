@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <cstdio>
@@ -37,8 +38,9 @@ class App
             assignments_plot = Figure(PLOT_FIGURE_SIZE, RIGHT_PLOT_POS,"array length", "n_assignments", ROBOTO_MEDIUM, PRIMARY_LIGHT);
             ROBOTO_MEDIUM.loadFromFile("fonts/Roboto-Light.ttf");
 
-            sf::RectangleShape rect(PLOT_BACKGROUND_SIZE); //leave it here for graphics background
-            rect.setFillColor(SECONDARY_DARK);
+            plots_background = sf::RectangleShape(PLOT_BACKGROUND_SIZE); //leave it here for graphics background
+            plots_background.setFillColor(SECONDARY_DARK);
+            plots_background.setPosition(sf::Vector2f(0.f, 0.f));
             
             for(int i = 0; i < N_SORT_BUTTONS; ++i) 
             {
