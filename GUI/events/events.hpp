@@ -39,7 +39,6 @@ class HoveredClickable : public Event
         ~HoveredClickable() = default;
         HoveredClickable() = default;
         void handle(sf::RenderWindow& window) override;
-
 };
 
 class Clicked : public Event

@@ -5,6 +5,7 @@
 
 #include "../button_trigger/button_trigger.hpp"
 #include "../plot/plot.hpp"
+#include "../../benchmark/benchmark/service.hpp"
 
 template <typename Sort>
 class SortBenchmarkTrigger : public ButtonTrigger
